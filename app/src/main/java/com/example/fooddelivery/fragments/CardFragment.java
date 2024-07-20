@@ -59,7 +59,7 @@ public class CardFragment extends Fragment {
             public void initiatMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
                 buffer.add(new MySwipeHelper.MyButton(
                         getContext(),
-                        R.drawable.d_1,
+                        R.drawable.ss_1,
                         Color.parseColor("#00FFFFFF"),
                         new MyButtonClickListener(){
                             @Override
