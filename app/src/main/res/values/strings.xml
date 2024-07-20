@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">foodOrdringApp</string>
+    <string name="delicious_food">Delicious\nfood for you</string>
+    <string name="search">Search</string>
+    <string name="monday">Monday</string>
+    <string name="foods">Foods</string>
+    <string name="drinks">Drinks</string>
+    <string name="snacks">Snacks</string>
+    <string name="sauce">Sauce</string>
+    <string name="crispy_chicken">Crispy Chicken</string>
+    <string name="see_more">see more</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="_200dz">200.000DZ</string>
+    <string name="info_desc">Delivered between monday aug and thursday 20 from 8pm to 91:32 pm</string>
+    <string name="delivery_info">Delivery info</string>
+    <string name="policy">All our foods are double checked before leaving our stores so by any case you found a broken food please contact our hotline immediately</string>
+    <string name="item_not_found">item not found</string>
+    <string name="try_searching">Try searching the item with \na different keyword.</string>
+</resources>

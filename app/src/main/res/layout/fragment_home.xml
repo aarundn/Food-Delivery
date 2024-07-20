@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
+    android:animateLayoutChanges="true"
+    tools:context=".fragments.HomeFragment">
+    <ImageView
+        android:id="@+id/imageMenu"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:fontFamily="@font/sf_pro_rounded_bold"
+        android:text="@string/delicious_food"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageMenu" />
+
+    <TextView
+        android:id="@+id/seeMore"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/see_more"
+        android:paddingEnd="50dp"
+        android:layout_marginTop="25dp"
+        android:gravity="end"
+        android:textColor="@color/orange"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainPager"
+        android:layout_marginTop="25dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="30dp"
+        android:paddingBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seeMore" />
+
+    <LinearLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/search_background"
+        android:layout_marginStart="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        android:transitionName="transitionSearch"
+        app:layout_constraintTop_toBottomOf="@+id/textView" >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/searchIcon"
+            android:contentDescription="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:src="@drawable/search"/>
+        <EditText
+            android:id="@+id/searchInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/search_background"
+            android:hint="@string/search"
+            android:textColor="@color/black"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:transitionName="transitionSearch"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:textColorHint="#7F7F80"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+    </LinearLayout>
+
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:background="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchLayout"
+        app:tabIndicatorFullWidth="true"
+        app:tabSelectedTextColor="@color/orange"
+        app:tabIndicatorColor="@color/orange"
+        app:tabTextAppearance="@style/tab_text"
+        app:tabTextColor="@color/secondItemsAndIcons">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/foods" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/drinks" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/snacks" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/sauce" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

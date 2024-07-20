@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".entities.FoodDetails">
+<ScrollView
+    android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/background"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/backPostImage"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/back_left"
+            android:padding="@dimen/_10sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/favoritePostImage"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:padding="@dimen/_12sdp"
+            android:src="@drawable/blach_heart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/imageCardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/_90sdp"
+            android:layout_marginTop="@dimen/_70sdp"
+            app:cardElevation="@dimen/_50sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imagePost"
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="@dimen/_180sdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/crispy_chicken"
+                app:riv_oval="true"
+                tools:layout_editor_absoluteX="33dp"
+                tools:layout_editor_absoluteY="-109dp" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/crispy_chicken"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageCardView" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_rounded_bold"
+            android:gravity="center"
+            android:text="@string/_200dz"
+            android:textColor="@color/orange"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:text="@string/delivery_info"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/price" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/info_desc"
+            android:textColor="@color/secondItemsAndIcons"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <TextView
+
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="50dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:text="Policy info"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/policy"
+            android:textColor="@color/secondItemsAndIcons"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/addCartButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/butto_backgroud"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:text="Add to cart"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

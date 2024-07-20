@@ -1,0 +1,28 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.FoodDelivery" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="statusBarBackground">@color/background</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="Theme.FoodDelivery" parent="Base.Theme.FoodDelivery" >
+
+    </style>
+    <style name="CustomBottomNavTheme" parent="Widget.Design.BottomNavigationView">
+        <!-- Customize background color -->
+        <item name="android:background">@android:color/transparent</item>
+        <!-- Customize icon tint color -->
+        <item name="itemIconTint">@drawable/custom_icons_color</item>
+        <item name="android:textSize">0sp</item>
+        <item name="android:itemBackground">@drawable/selected_item_back</item>
+        <!-- Customize text color -->
+        <!--<item name="itemTextColor">@color/custom_bottom_nav_text_color</item>-->
+    </style>
+    <style name="tab_text" parent="TextAppearance.AppCompat.Small">
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+        <item name="textAllCaps">false</item>
+    </style>
+</resources>
