@@ -1,8 +1,8 @@
 package com.example.fooddelivery.listeners;
 
 
-import com.example.fooddelivery.models.poste;
+import com.example.fooddelivery.models.Post;
 
 public interface OnItemClickListener {
-    void onItemClicked(int position , poste post);
+    void onItemClicked(int position , Post post);
 }

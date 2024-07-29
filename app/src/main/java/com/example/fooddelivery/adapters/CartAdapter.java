@@ -11,17 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.fooddelivery.R;
-import com.example.fooddelivery.models.poste;
+import com.example.fooddelivery.models.Post;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-    private List<poste> posteList;
+    private List<Post> postList;
 
-    public CartAdapter(List<poste> posteList) {
-        this.posteList = posteList;
+    public CartAdapter(List<Post> postList) {
+        this.postList = postList;
     }
 
     @NonNull
@@ -36,13 +37,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        holder.setCartList(posteList.get(position));
+        holder.setCartList(postList.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return posteList.size();
+        return postList.size();
     }
 
     public class CartViewHolder extends RecyclerView.ViewHolder {
@@ -60,8 +61,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             cartMinusSign = itemView.findViewById(R.id.minusSignCartTv);
             cartCounter = itemView.findViewById(R.id.counterCartTv);
         }
-        void setCartList(poste post){
-            cartImage.setImageResource(post.getImage());
+        void setCartList(Post post){
+//            Glide.with(this).load(post)
             cartTitle.setText(post.getTitle());
             cartPrice.setText(String.valueOf(post.getPrice()));
         }

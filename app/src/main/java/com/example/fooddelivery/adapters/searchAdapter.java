@@ -5,7 +5,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fooddelivery.R;
 
 import com.example.fooddelivery.listeners.OnItemClickListener;
-import com.example.fooddelivery.models.poste;
+import com.example.fooddelivery.models.Post;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -26,16 +25,16 @@ import java.util.TimerTask;
 
 public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHolder> {
 
-    private List<poste> posteList;
-    private List<poste> postSource;
+    private List<Post> postList;
+    private List<Post> postSource;
     private Timer timer;
     private final OnItemClickListener onItemClicked;
     private Context context;
 
-    public searchAdapter(List<poste> posteList, OnItemClickListener onItemClicked, Context context) {
-        this.posteList = posteList;
+    public searchAdapter(List<Post> postList, OnItemClickListener onItemClicked, Context context) {
+        this.postList = postList;
         this.onItemClicked = onItemClicked;
-        this.postSource = posteList;
+        this.postSource = postList;
         this.context = context;
     }
 
@@ -53,16 +52,16 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        holder.setPostList(posteList.get(position));
+        holder.setPostList(postList.get(position));
         holder.constrainLayout.setOnClickListener(v -> {
-            onItemClicked.onItemClicked(holder.getLayoutPosition(),posteList.get(position));
+            onItemClicked.onItemClicked(holder.getLayoutPosition(), postList.get(position));
         });
 
     }
 
     @Override
     public int getItemCount() {
-        return posteList.size();
+        return postList.size();
     }
     @Override
     public int getItemViewType(int position) {
@@ -83,8 +82,8 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
 
         }
 
-        void setPostList(poste post){
-            imageView.setImageResource(post.getImage());
+        void setPostList(Post post){
+//            imageView.setImageResource(post.getImage());
             postTitle.setText(post.getTitle());
             price.setText(String.valueOf(post.getPrice()));
         }
@@ -97,15 +96,15 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
             @Override
             public void run() {
                 if (searchKeyword.trim().isEmpty()){
-                    posteList = postSource;
+                    postList = postSource;
                 }else{
-                    ArrayList<poste> temp = new ArrayList<>();
-                    for (poste post: postSource){
+                    ArrayList<Post> temp = new ArrayList<>();
+                    for (Post post: postSource){
                         if (post.getTitle().toLowerCase().contains(searchKeyword)){
                             temp.add(post);
                         }
                     }
-                    posteList = temp;
+                    postList = temp;
 
                 }
                 handler.post(new Runnable() {
@@ -118,7 +117,7 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
         },500);
     }
     public boolean isEmptyList(){
-        if (posteList.isEmpty()){
+        if (postList.isEmpty()){
             return true;
         }
         return false;

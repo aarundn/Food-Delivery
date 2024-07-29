@@ -9,14 +9,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fooddelivery.R;
-import com.example.fooddelivery.models.poste;
+import com.example.fooddelivery.models.Post;
 
 
 public class FoodDetails extends AppCompatActivity {
     private  ImageView coverImage, backImage, likeImage;
     private TextView title, price;
     private Button addCartButton;
-    private poste availablePost;
+    private Post availablePost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

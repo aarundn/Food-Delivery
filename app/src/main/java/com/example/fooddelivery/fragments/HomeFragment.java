@@ -8,21 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.fooddelivery.R;
-import com.example.fooddelivery.adapters.foodAdapter;
+import com.example.fooddelivery.adapters.FoodAdapter;
 import com.example.fooddelivery.entities.FoodDetails;
 import com.example.fooddelivery.entities.SearchActivity;
 import com.example.fooddelivery.listeners.HomeViewpagerOnClickListener;
-import com.example.fooddelivery.models.poste;
+import com.example.fooddelivery.models.Post;
+import com.example.fooddelivery.viewmodel.HomeViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -34,11 +38,15 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
 
 
 
-    private List<poste> filteredPosts;
+    private List<Post> filteredPosts;
+    private List<Post> allPosts;
     private TabLayout tableLayout;
-    private foodAdapter foodAdapter;
+    private FoodAdapter foodAdapter;
     private EditText searchEditText;
     private LinearLayout searchLayout;
+    private HomeViewModel homeViewModel;
+    private boolean isDataFetched;
+    private ProgressBar progressBar;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -46,10 +54,28 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         tableLayout = view.findViewById(R.id.tabLayout);
-        filteredPosts = new ArrayList<>(getPosts());
-        foodAdapter = new foodAdapter(filteredPosts,this);
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
+        allPosts = new ArrayList<>();
+
+        foodAdapter = new FoodAdapter(this,requireContext());
+        homeViewModel.getHomePosts("Foods").observe(getViewLifecycleOwner(), postes -> {
+            filteredPosts = new ArrayList<>(postes);
+            foodAdapter.submitList(filteredPosts);
+            foodAdapter.notifyDataSetChanged();
+        });
+
+//        homeViewModel.getHomePosts().observe(getViewLifecycleOwner(), postes -> {
+//            allPosts.addAll(postes);
+//            filteredPosts = new ArrayList<>();
+//            fillterPosts("Foods");
+//            foodAdapter.submitList(filteredPosts);
+//            foodAdapter.notifyDataSetChanged();
+//        });
+
+
 
         RecyclerView postViewPager = view.findViewById(R.id.mainPager);
         searchEditText = view.findViewById(R.id.searchInput);
@@ -73,14 +99,38 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
             startActivity(intent,compat.toBundle());
         });
 
-        setPostViewPager(postViewPager);
-        fillterPosts("Foods");
+        homeViewModel.getIsInfoFetched().observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean){
+                    progressBar.setVisibility(View.GONE);
+                }else {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
         tableLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                homeViewModel.getIsInfoFetched().observe(requireActivity(), new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        if (aBoolean){
+                            progressBar.setVisibility(View.GONE);
+                        }else {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
                 String tabName = Objects.requireNonNull(tab.getText()).toString();
+                homeViewModel.getHomePosts(tabName).observe(getViewLifecycleOwner(), postes -> {
+                    filteredPosts = new ArrayList<>(postes);
+                    foodAdapter.submitList(filteredPosts);
+                    foodAdapter.notifyDataSetChanged();
 
-                fillterPosts(tabName);
+                });
             }
 
             @Override
@@ -93,19 +143,11 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
 
             }
         });
+        setPostViewPager(postViewPager);
     }
 
-    public void fillterPosts(String tabName) {
-        filteredPosts.clear();
-            for (poste post : getPosts()) {
-                // Assuming each post has a category field
-                if (post.getCategory().equals(tabName)) {
-                    filteredPosts.add(post);
 
-                }
-            }
-            foodAdapter.notifyDataSetChanged(); // Notify adapter about data change
-        }
+
 
 
     @Override
@@ -122,35 +164,7 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
         postViewPager.setAdapter(foodAdapter);
 
     }
-    private List<poste> getPosts(){
-        List<poste> posts = new ArrayList<>();
-        poste post = new poste("Crispy chicken",R.drawable.crispy_chicken,200.5f,"Foods");
-        poste post1 = new poste("Veggie Supreme",R.drawable.veggie_supreme,350f,"Foods");
-        poste post2 = new poste("Crispy chicken",R.drawable.crispy_chicken,200.5f,"Foods");
-        poste post3 = new poste("Drink1",R.drawable.crispy_chicken,200.5f,"Drinks");
-        poste post4 = new poste("Drink2",R.drawable.veggie_supreme,350f,"Drinks");
-        poste post5 = new poste("Crispy snacks",R.drawable.crispy_chicken,200.5f,"Snacks");
-        poste post6 = new poste("Crispy snacks1",R.drawable.crispy_chicken,200.5f,"Snacks");
-        poste post7 = new poste("Veggie Supreme",R.drawable.veggie_supreme,350f,"Foods");
-        poste post8 = new poste("Crispy chicken",R.drawable.crispy_chicken,200.5f,"Foods");
-        poste post10 = new poste("sauce",R.drawable.crispy_chicken,200.5f,"Sauce");
-        poste post11 = new poste("sauce1",R.drawable.veggie_supreme,350f,"Sauce");
-        poste post12 = new poste("Crispy snacks2",R.drawable.crispy_chicken,200.5f,"Snacks");
-        posts.add(post);
-        posts.add(post1);
-        posts.add(post2);
-        posts.add(post3);
-        posts.add(post4);
-        posts.add(post5);
-        posts.add(post6);
-        posts.add(post7);
-        posts.add(post8);
-        posts.add(post10);
-        posts.add(post11);
-        posts.add(post12);
 
-        return posts;
-    }
 
     @Override
     public void OnItemClicked(int position) {

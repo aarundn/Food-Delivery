@@ -4,17 +4,29 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 
-public class poste implements Serializable, Parcelable {
+public class Post implements Serializable, Parcelable {
+    private String id;
     private String title;
-    private int Image;
-    private float  price;
+    private String Image;
+    private String  price;
     private String category;
 
+    public Post() {
+    }
 
-    public poste(String title, int image, float price, String category) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Post(String title, String image, String price, String category) {
         this.title = title;
         Image = image;
         this.price = price;
@@ -29,21 +41,21 @@ public class poste implements Serializable, Parcelable {
         this.category = category;
     }
 
-    protected poste(Parcel in) {
+    protected Post(Parcel in) {
         title = in.readString();
-        Image = in.readInt();
-        price = in.readFloat();
+        Image = in.readString();
+        price = in.readString();
     }
 
-    public static final Creator<poste> CREATOR = new Creator<poste>() {
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
         @Override
-        public poste createFromParcel(Parcel in) {
-            return new poste(in);
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
         }
 
         @Override
-        public poste[] newArray(int size) {
-            return new poste[size];
+        public Post[] newArray(int size) {
+            return new Post[size];
         }
     };
 
@@ -55,19 +67,19 @@ public class poste implements Serializable, Parcelable {
         this.title = title;
     }
 
-    public int getImage() {
+    public String getImage() {
         return Image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         Image = image;
     }
 
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -79,7 +91,12 @@ public class poste implements Serializable, Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(title);
-        dest.writeInt(Image);
-        dest.writeFloat(price);
+        dest.writeString(Image);
+        dest.writeString(price);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return super.equals(obj);
     }
 }

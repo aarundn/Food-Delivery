@@ -1,31 +1,41 @@
 package com.example.fooddelivery.adapters;
 
+import static com.example.fooddelivery.adapters.FoodAdapter.FoodViewHolder.DIFF_CALLBACK;
+
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.fooddelivery.R;
 import com.example.fooddelivery.listeners.HomeViewpagerOnClickListener;
-import com.example.fooddelivery.models.poste;
+import com.example.fooddelivery.models.Post;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
-public class foodAdapter extends RecyclerView.Adapter<foodAdapter.FoodViewHolder> {
+public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
 
-    private List<poste> posteList;
+    private final AsyncListDiffer<Post> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+    private Context context;
 
     private final HomeViewpagerOnClickListener homeInterface;
 
 
-    public foodAdapter(List<poste> posteList, HomeViewpagerOnClickListener homeInterface) {
-        this.posteList = posteList;
+    public void submitList(List<Post> list) {
+        mDiffer.submitList(list);
+    }
+    public FoodAdapter(HomeViewpagerOnClickListener homeInterface, Context context) {
         this.homeInterface = homeInterface;
+        this.context = context;
     }
 
     @NonNull
@@ -42,13 +52,14 @@ public class foodAdapter extends RecyclerView.Adapter<foodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        holder.setPostList(posteList.get(position));
+        Post post = mDiffer.getCurrentList().get(position);
+        holder.setPostList(post,context);
 
     }
 
     @Override
     public int getItemCount() {
-        return posteList.size();
+        return mDiffer.getCurrentList().size();
     }
 
      static class FoodViewHolder extends RecyclerView.ViewHolder{
@@ -71,11 +82,28 @@ public class foodAdapter extends RecyclerView.Adapter<foodAdapter.FoodViewHolder
 
         }
 
-        void setPostList(poste post){
-            imageView.setImageResource(post.getImage());
+        void setPostList(Post post, Context context){
+            Glide.with(context).load(post.getImage()).into(imageView);
             postTitle.setText(post.getTitle());
-            price.setText(String.valueOf(post.getPrice()));
+            price.setText(post.getPrice());
         }
+
+         public static final DiffUtil.ItemCallback<Post> DIFF_CALLBACK
+                 = new DiffUtil.ItemCallback<Post>() {
+             @Override
+             public boolean areItemsTheSame(
+                     @NonNull Post oldPost, @NonNull Post newPost) {
+                 // User properties may have changed if reloaded from the DB, but ID is fixed
+                 return oldPost.getId() == newPost.getId();
+             }
+             @Override
+             public boolean areContentsTheSame(
+                     @NonNull Post oldPost, @NonNull Post newPost) {
+                 // NOTE: if you use equals, your object must properly override Object#equals()
+                 // Incorrectly returning false here will result in too many animations.
+                 return oldPost.equals(newPost);
+             }
+         };
     }
 
 
