@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.fooddelivery.R;
 import com.example.fooddelivery.entities.EmailVerificationActivity;
 import com.example.fooddelivery.entities.MainActivity;
+import com.example.fooddelivery.entities.ResetPasswordActivity;
 import com.example.fooddelivery.viewmodel.UserViewModel;
 
 public class SignInFragment extends Fragment {
@@ -81,6 +82,11 @@ public class SignInFragment extends Fragment {
                     normalInputsState(passwordEdt);
                 }
             }
+        });
+
+        forgotPasswordTxt.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), ResetPasswordActivity.class);
+            startActivity(intent);
         });
     }
     private Boolean inputsCheck() {

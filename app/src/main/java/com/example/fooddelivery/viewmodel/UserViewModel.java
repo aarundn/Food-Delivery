@@ -1,12 +1,17 @@
 package com.example.fooddelivery.viewmodel;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.fooddelivery.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
@@ -16,7 +21,7 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Boolean> isLogged = new MutableLiveData<>();
     private MutableLiveData<Boolean> isEmailAlreadyInUse = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> isSignedIn = new MutableLiveData<>();
-
+    private MutableLiveData<Boolean> isResetPasswordSent = new MutableLiveData<>();
 
     public UserViewModel() {
         auth = FirebaseAuth.getInstance();
@@ -24,6 +29,9 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsSignUpSuccessfully() {
         return isSignUpSuccessfully;
+    }
+    public LiveData<Boolean> getIsResetPasswordSent(){
+        return isResetPasswordSent;
     }
 
     public LiveData<Boolean> getIsLogged() {
@@ -91,7 +99,16 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-
+    public void forgotPassword(String email){
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        isResetPasswordSent.setValue(true);
+                    }
+                }).addOnFailureListener( e -> {
+                    isResetPasswordSent.setValue(false);
+                });
+    }
     public LiveData<Boolean> getIsSignedIn() {
         return isSignedIn;
     }
