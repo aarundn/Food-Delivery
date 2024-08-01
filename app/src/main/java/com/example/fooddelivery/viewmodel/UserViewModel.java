@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 public class UserViewModel extends ViewModel {
     private FirebaseAuth auth;
     private MutableLiveData<Boolean> isSignUpSuccessfully = new MutableLiveData<>(false);
-    private MutableLiveData<Boolean> isVerified = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> isLoggedIn = new MutableLiveData<>();
     private MutableLiveData<Boolean> isEmailAlreadyInUse = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> isSignedIn = new MutableLiveData<>();
 
@@ -25,8 +25,8 @@ public class UserViewModel extends ViewModel {
     public LiveData<Boolean> getIsSignUpSuccessfully(){
         return isSignUpSuccessfully;
     }
-    public LiveData<Boolean> getIsVerified(){
-        return isVerified;
+    public LiveData<Boolean> getIsLoggedIn(){
+        return isLoggedIn;
     }
 
     public LiveData<Boolean> getIsEmailAlreadyInUse() {
@@ -56,18 +56,19 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-//    public void login(String email, String password) {
-//        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {
-//            if (task2.isSuccessful()) {
-//                if (auth.getCurrentUser().isEmailVerified()) {
-//                    isSignedIn.setValue(true);
-//                }
-//
-//            }
-//        }).addOnFailureListener(e -> {
-//            Log.d("TAG3", e.getMessage().toString());
-//        });
-//    }
+    public void login(String email, String password) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {
+            if (task2.isSuccessful()) {
+
+                    isLoggedIn.setValue(true);
+
+            } else {
+                isLoggedIn.setValue(false);
+            }
+        }).addOnFailureListener(e -> {
+            Log.d("TAG3", e.getMessage().toString());
+        });
+    }
 
     public void checkEmailVerification(String email, String password) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {

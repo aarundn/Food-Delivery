@@ -48,22 +48,22 @@ public class EmailVerificationActivity extends AppCompatActivity {
         verifyButton.setOnClickListener(v -> {
             verifyProgress.setVisibility(View.VISIBLE);
             verifyButton.setText("");
-            userViewModel.checkEmailVerification(email, password);
+
+            userViewModel.getIsSignedIn().observe(this, isSignedIn -> {
+                if (isSignedIn) {
+                    verifyProgress.setVisibility(View.GONE);
+                    verifyButton.setText("verify");
+                    Intent intent = new Intent(EmailVerificationActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    EmailVerificationActivity.this.finish();
+                } else {
+                    Toast.makeText(this, "Failed to sign in. Try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         });
 
-        userViewModel.getIsSignedIn().observe(this, isSignedIn -> {
 
-            if (isSignedIn) {
-                verifyProgress.setVisibility(View.GONE);
-                verifyButton.setText("verify");
-                Intent intent = new Intent(EmailVerificationActivity.this, MainActivity.class);
-                startActivity(intent);
-                EmailVerificationActivity.this.finish();
-            } else {
-                Toast.makeText(this, "Failed to sign in. Try again.", Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 }

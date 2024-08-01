@@ -62,6 +62,7 @@ public class SignUpFragment extends Fragment {
                 loadingInputsState(passwordEdt);
                 loadingInputsState(confirmPass);
                 userViewModel.SignUpWithEmailAndPassword(emailEdt.getText().toString().trim(), passwordEdt.getText().toString());
+                userViewModel.checkEmailVerification(emailEdt.getText().toString().trim(), passwordEdt.getText().toString());
 
             } else {
                 registerProgressBar.setVisibility(View.GONE);
@@ -75,10 +76,15 @@ public class SignUpFragment extends Fragment {
                 if (aBoolean) {
                     registerProgressBar.setVisibility(View.GONE);
                     registerBtn.setText("register");
-                    Intent intent = new Intent(requireActivity(), EmailVerificationActivity.class);
-                    intent.putExtra("email",emailEdt.getText().toString());
-                    intent.putExtra("password",passwordEdt.getText().toString());
-                    startActivity(intent);
+                    userViewModel.getIsSignedIn().observe(requireActivity(), isSignedIn -> {
+                        if (isSignedIn) {
+                            Intent intent = new Intent(requireActivity(), EmailVerificationActivity.class);
+                            startActivity(intent);
+                            requireActivity().finish();
+                        } else {
+                            Toast.makeText(requireActivity(), "Failed to sign in. Try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     requireActivity().finish();
                 }
             }
@@ -95,6 +101,7 @@ public class SignUpFragment extends Fragment {
         });
 
     }
+
 
     private Boolean inputsCheck() {
         if (!Patterns.EMAIL_ADDRESS.matcher(emailEdt.getText().toString()).matches()) {
