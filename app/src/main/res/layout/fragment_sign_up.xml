@@ -1,14 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".fragments.loginfragments.SignUpFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:padding="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email Adress"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:textSize="18sp"
+            android:textColor="@color/secondItemsAndIcons"/>
+        <EditText
+            android:id="@+id/registerEmailEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#7F7F80"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/black"
+            android:inputType="textEmailAddress"
+            android:hint="type your email"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:textSize="18sp"
+            android:textColor="@color/secondItemsAndIcons"/>
+        <EditText
+            android:id="@+id/registerPassEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#7F7F80"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/black"
+            android:inputType="textPassword"
+            android:hint="type your Password"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Password"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:textSize="18sp"
+            android:textColor="@color/secondItemsAndIcons"/>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/confirmPassEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#7F7F80"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/black"
+            android:inputType="textPassword"
+            android:hint="type your Password"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="10dp">
+            <ProgressBar
+                android:id="@+id/registerProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/white"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:elevation="5dp"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/registerButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/butto_backgroud"
+                android:fontFamily="@font/sf_pro_rounded_semibold"
+                android:text="register"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                />
+        </FrameLayout>
 
-</FrameLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
