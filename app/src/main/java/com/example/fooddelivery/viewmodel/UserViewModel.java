@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 public class UserViewModel extends ViewModel {
     private FirebaseAuth auth;
     private MutableLiveData<Boolean> isSignUpSuccessfully = new MutableLiveData<>(false);
-    private MutableLiveData<Boolean> isVerified = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> isLogged = new MutableLiveData<>();
     private MutableLiveData<Boolean> isEmailAlreadyInUse = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> isSignedIn = new MutableLiveData<>();
 
@@ -22,11 +22,12 @@ public class UserViewModel extends ViewModel {
         auth = FirebaseAuth.getInstance();
     }
 
-    public LiveData<Boolean> getIsSignUpSuccessfully(){
+    public LiveData<Boolean> getIsSignUpSuccessfully() {
         return isSignUpSuccessfully;
     }
-    public LiveData<Boolean> getIsVerified(){
-        return isVerified;
+
+    public LiveData<Boolean> getIsLogged() {
+        return isLogged;
     }
 
     public LiveData<Boolean> getIsEmailAlreadyInUse() {
@@ -56,24 +57,22 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-//    public void login(String email, String password) {
-//        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {
-//            if (task2.isSuccessful()) {
-//                if (auth.getCurrentUser().isEmailVerified()) {
-//                    isSignedIn.setValue(true);
-//                }
-//
-//            }
-//        }).addOnFailureListener(e -> {
-//            Log.d("TAG3", e.getMessage().toString());
-//        });
-//    }
+    public void login(String email, String password) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {
+            if (task2.isSuccessful()) {
+                isLogged.setValue(true);
+            }
+        }).addOnFailureListener(e -> {
+            Log.d("TAG3", e.getMessage().toString());
+            isLogged.setValue(false);
+        });
+    }
 
     public void checkEmailVerification(String email, String password) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {
             if (task2.isSuccessful()) {
                 auth.getCurrentUser().reload().addOnCompleteListener(task3 -> {
-                    if (task3.isSuccessful()){
+                    if (task3.isSuccessful()) {
                         if (auth.getCurrentUser().isEmailVerified()) {
                             isSignedIn.setValue(true);
                         } else {
@@ -87,12 +86,13 @@ public class UserViewModel extends ViewModel {
                 Log.d("TAG3", "Sign in failed.");
             }
         }).addOnFailureListener(e -> {
-                Log.d("TAG2", e.getMessage());
+            Log.d("TAG2", e.getMessage());
+            isSignedIn.setValue(false);
         });
     }
 
 
-    public LiveData<Boolean> getIsSignedIn(){
+    public LiveData<Boolean> getIsSignedIn() {
         return isSignedIn;
     }
 
