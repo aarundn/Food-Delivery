@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.fooddelivery.R;
 import com.example.fooddelivery.entities.EmailVerificationActivity;
+import com.example.fooddelivery.entities.LoginActivity;
 import com.example.fooddelivery.entities.MainActivity;
 import com.example.fooddelivery.entities.ResetPasswordActivity;
 import com.example.fooddelivery.viewmodel.UserViewModel;

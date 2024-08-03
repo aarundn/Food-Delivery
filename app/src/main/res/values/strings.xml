@@ -17,4 +17,5 @@
     <string name="policy">All our foods are double checked before leaving our stores so by any case you found a broken food please contact our hotline immediately</string>
     <string name="item_not_found">item not found</string>
     <string name="try_searching">Try searching the item with \na different keyword.</string>
+    <string name="your_internet_connection">Your internet connection is currently not available please check or try again.</string>
 </resources>

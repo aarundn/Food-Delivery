@@ -24,6 +24,7 @@ import com.example.fooddelivery.R;
 import com.example.fooddelivery.adapters.FoodAdapter;
 import com.example.fooddelivery.entities.FoodDetails;
 import com.example.fooddelivery.entities.SearchActivity;
+import com.example.fooddelivery.helper.NetworkReceiver;
 import com.example.fooddelivery.listeners.HomeViewpagerOnClickListener;
 import com.example.fooddelivery.models.Post;
 import com.example.fooddelivery.viewmodel.HomeViewModel;
@@ -175,4 +176,8 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
         intent.putExtra("price",String.valueOf(filteredPosts.get(position).getPrice()));
         startActivity(intent);
     }
+
+
+
+
 }

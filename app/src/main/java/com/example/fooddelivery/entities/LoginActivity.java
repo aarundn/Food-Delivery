@@ -34,4 +34,10 @@ public class LoginActivity extends AppCompatActivity {
             tab.setText(tabsList.get(position));
         })).attach();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
 }
