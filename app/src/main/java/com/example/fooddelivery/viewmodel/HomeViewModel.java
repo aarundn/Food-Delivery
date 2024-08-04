@@ -32,6 +32,7 @@ public class HomeViewModel extends ViewModel {
 
     public MutableLiveData<List<Post>> getHomePosts(String tabName){
         postList1 = new MutableLiveData<>(new ArrayList<>());
+        _isInfoFetched.setValue(false);
         collectionReference.whereEqualTo(Constants.POST_CATEGORY,tabName).limit(3).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 QuerySnapshot documentSnapshot = task.getResult();
@@ -42,10 +43,13 @@ public class HomeViewModel extends ViewModel {
                         _isInfoFetched.setValue(true);
                     }
                     postList1.setValue(postList1.getValue());
+                } else {
+                    _isInfoFetched.setValue(false);
                 }
             }
         }).addOnFailureListener(e -> {
             Log.d("ERROR:", Objects.requireNonNull(e.getMessage()));
+            _isInfoFetched.setValue(false);
         });
         return postList1;
     }

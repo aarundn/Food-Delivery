@@ -31,7 +31,12 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
 
     public void submitList(List<Post> list) {
-        mDiffer.submitList(list);
+        if (list.size() > 3) {
+            mDiffer.submitList(list.subList(0 , 3));
+        }else {
+            mDiffer.submitList(list);
+        }
+
     }
     public FoodAdapter(HomeViewpagerOnClickListener homeInterface, Context context) {
         this.homeInterface = homeInterface;

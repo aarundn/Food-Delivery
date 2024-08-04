@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,10 +36,9 @@ public class MainActivity extends AppCompatActivity implements NetworkReceiver.R
 
     private BottomNavigationView bottomNavigationView;
     private LinearLayout checkNetworkStatLayout;
-    private ConstraintLayout contentLayout;
+    private FrameLayout contentLayout;
     private Button tryAgainButton;
     private ProgressBar tryAgainProgressBar;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,24 +47,15 @@ public class MainActivity extends AppCompatActivity implements NetworkReceiver.R
 
         bottomNavigationView = findViewById(R.id.bottonNav);
         checkNetworkStatLayout = findViewById(R.id.networkStatLayout);
-        contentLayout = findViewById(R.id.mainActivityContent);
+        contentLayout = findViewById(R.id.frameLayout);
         tryAgainButton = findViewById(R.id.tryAgainButton);
-        swipeRefreshLayout = findViewById(R.id.swipeLayout);
         tryAgainProgressBar = findViewById(R.id.tryAgainProgressBar);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                checkNetwork();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
         checkNetwork();
         tryAgainButton.setOnClickListener(v -> {
             tryAgainProgressBar.setVisibility(View.VISIBLE);
             tryAgainButton.setText("");
-            checkNetwork();
+            checkNetworkForOthers();
 
         });
 
@@ -79,15 +70,15 @@ public class MainActivity extends AppCompatActivity implements NetworkReceiver.R
                     break;
                 case R.id.heart:
                     replaceFragment(new FavoriteFragment());
-                    checkNetwork();
+                    checkNetworkForOthers();
                     break;
                 case R.id.user:
                     replaceFragment(new profileFragment());
-                    checkNetwork();
+                    checkNetworkForOthers();
                     break;
                 case R.id.history:
                     replaceFragment(new CardFragment());
-                    checkNetwork();
+                    checkNetworkForOthers();
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + item.getItemId());
@@ -164,11 +155,28 @@ public class MainActivity extends AppCompatActivity implements NetworkReceiver.R
         view.setBackgroundColor(Color.BLACK);
         textView.setTextColor(color);
 
-        if (!isConnected){
+        if (!isConnected) {
             snackbar.show();
         }
-
     }
+        private void checkNetworkForOthers() {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.new.conn.CONNECTIVITY_CHANGE");
+            registerReceiver(new NetworkReceiver(), intentFilter);
+            NetworkReceiver.Listener = this;
+
+            ConnectivityManager manager = (ConnectivityManager) getApplicationContext().
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+            boolean isConnected = networkInfo != null && networkInfo.isConnectedOrConnecting();
+            displayNetworkState(isConnected);
+
+        }
+
+
+
+
 
     private void displayNetworkState(boolean isConnected) {
         tryAgainProgressBar.setVisibility(View.GONE);
