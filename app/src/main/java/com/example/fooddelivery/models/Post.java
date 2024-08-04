@@ -18,6 +18,8 @@ public class Post implements Serializable, Parcelable {
     public Post() {
     }
 
+
+
     public String getId() {
         return id;
     }

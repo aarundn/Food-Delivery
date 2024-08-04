@@ -2,6 +2,7 @@ package com.example.fooddelivery.adapters;
 
 import android.content.Context;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.fooddelivery.R;
 
 import com.example.fooddelivery.listeners.OnItemClickListener;
@@ -23,19 +27,24 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.FoodViewHolder> {
 
+    private final AsyncListDiffer<Post> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
     private List<Post> postList;
     private List<Post> postSource;
     private Timer timer;
     private final OnItemClickListener onItemClicked;
     private Context context;
 
-    public searchAdapter(List<Post> postList, OnItemClickListener onItemClicked, Context context) {
-        this.postList = postList;
+    public void submitList(List<Post> list) {
+            mDiffer.submitList(list);
+
+    }
+
+    public SearchAdapter(OnItemClickListener onItemClicked, Context context) {
         this.onItemClicked = onItemClicked;
-        this.postSource = postList;
         this.context = context;
+        postList = mDiffer.getCurrentList();
     }
 
     @NonNull
@@ -52,16 +61,17 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        holder.setPostList(postList.get(position));
+        Post post = mDiffer.getCurrentList().get(position);
+        holder.setPostList(post, context);
         holder.constrainLayout.setOnClickListener(v -> {
-            onItemClicked.onItemClicked(holder.getLayoutPosition(), postList.get(position));
+            onItemClicked.onItemClicked(holder.getLayoutPosition(), post);
         });
 
     }
 
     @Override
     public int getItemCount() {
-        return postList.size();
+        return mDiffer.getCurrentList().size();
     }
     @Override
     public int getItemViewType(int position) {
@@ -82,12 +92,29 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
 
         }
 
-        void setPostList(Post post){
-//            imageView.setImageResource(post.getImage());
+        void setPostList(Post post, Context context){
+            Glide.with(context).load(post.getImage()).into(imageView);
             postTitle.setText(post.getTitle());
             price.setText(String.valueOf(post.getPrice()));
         }
     }
+
+    public static final DiffUtil.ItemCallback<Post> DIFF_CALLBACK
+            = new DiffUtil.ItemCallback<Post>() {
+        @Override
+        public boolean areItemsTheSame(
+                @NonNull Post oldPost, @NonNull Post newPost) {
+            // User properties may have changed if reloaded from the DB, but ID is fixed
+            return oldPost.getId() == newPost.getId();
+        }
+        @Override
+        public boolean areContentsTheSame(
+                @NonNull Post oldPost, @NonNull Post newPost) {
+            // NOTE: if you use equals, your object must properly override Object#equals()
+            // Incorrectly returning false here will result in too many animations.
+            return oldPost.equals(newPost);
+        }
+    };
     android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
     public void searchPosts(final String searchKeyword){
 
@@ -96,15 +123,16 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
             @Override
             public void run() {
                 if (searchKeyword.trim().isEmpty()){
-                    postList = postSource;
+                    mDiffer.submitList(postList);
                 }else{
                     ArrayList<Post> temp = new ArrayList<>();
-                    for (Post post: postSource){
+                    for (Post post: postList){
                         if (post.getTitle().toLowerCase().contains(searchKeyword)){
                             temp.add(post);
+                            Log.d("TAG88", postList.toString());
                         }
                     }
-                    postList = temp;
+                    mDiffer.submitList(temp);
 
                 }
                 handler.post(new Runnable() {
@@ -117,7 +145,7 @@ public class searchAdapter extends RecyclerView.Adapter<searchAdapter.FoodViewHo
         },500);
     }
     public boolean isEmptyList(){
-        if (postList.isEmpty()){
+        if (mDiffer.getCurrentList().isEmpty()){
             return true;
         }
         return false;
