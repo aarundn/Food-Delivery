@@ -38,6 +38,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.FoodViewHo
 
     public void submitList(List<Post> list) {
             mDiffer.submitList(list);
+            postList = new ArrayList<>(list);
 
     }
 
@@ -120,21 +121,20 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.FoodViewHo
 
         timer = new Timer();
         timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (searchKeyword.trim().isEmpty()){
-                    mDiffer.submitList(postList);
-                }else{
-                    ArrayList<Post> temp = new ArrayList<>();
-                    for (Post post: postList){
-                        if (post.getTitle().toLowerCase().contains(searchKeyword)){
-                            temp.add(post);
-                            Log.d("TAG88", postList.toString());
-                        }
-                    }
-                    mDiffer.submitList(temp);
+                           @Override
+                           public void run() {
+                               List<Post> filteredList = new ArrayList<>();
+                               if (searchKeyword.trim().isEmpty()) {
+                                   filteredList = new ArrayList<>(postList);
+                               } else {
+                                   for (Post post : postList) {
+                                       if (post.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())) {
+                                           filteredList.add(post);
+                                       }
+                                   }
+                               }
+                               mDiffer.submitList(filteredList);
 
-                }
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

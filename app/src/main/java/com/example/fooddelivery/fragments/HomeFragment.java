@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fooddelivery.R;
 import com.example.fooddelivery.adapters.FoodAdapter;
 import com.example.fooddelivery.entities.FoodDetails;
+import com.example.fooddelivery.entities.MoreActivity;
 import com.example.fooddelivery.entities.SearchActivity;
+import com.example.fooddelivery.helper.Constants;
 import com.example.fooddelivery.helper.NetworkReceiver;
 import com.example.fooddelivery.listeners.HomeViewpagerOnClickListener;
 import com.example.fooddelivery.models.Post;
@@ -31,6 +34,7 @@ import com.example.fooddelivery.viewmodel.HomeViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,6 +52,8 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
     private HomeViewModel homeViewModel;
     private boolean isDataFetched;
     private ProgressBar progressBar;
+    private TextView moreText;
+    private String CATEGORY ;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -59,6 +65,7 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
         tableLayout = view.findViewById(R.id.tabLayout);
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
+        moreText = view.findViewById(R.id.seeMore);
         allPosts = new ArrayList<>();
 
         foodAdapter = new FoodAdapter(this,requireContext());
@@ -111,10 +118,17 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
             }
         });
 
-
+        CATEGORY = "Foods";
+        moreText.setOnClickListener(v -> {
+            Intent intent  = new Intent(requireActivity(), MoreActivity.class);
+            intent.putExtra(Constants.POST_CATEGORY, CATEGORY);
+            startActivity(intent);
+            requireActivity().finish();
+        });
         tableLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
                 homeViewModel.getIsInfoFetched().observe(requireActivity(), new Observer<Boolean>() {
                     @Override
                     public void onChanged(Boolean aBoolean) {
@@ -126,6 +140,7 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
                     }
                 });
                 String tabName = Objects.requireNonNull(tab.getText()).toString();
+                CATEGORY = tabName;
                 homeViewModel.getHomePosts(tabName).observe(getViewLifecycleOwner(), postes -> {
                     filteredPosts = new ArrayList<>(postes);
                     foodAdapter.submitList(filteredPosts);
