@@ -77,6 +77,7 @@ public class SearchAndMoreViewModel extends ViewModel {
             isListEmpty.setValue(true);
         } else {
             isListEmpty.setValue(false);
+            //all
         }
         return searchedPost;
     }
