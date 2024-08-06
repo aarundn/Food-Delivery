@@ -16,6 +16,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SearchAndMoreViewModel extends ViewModel {
     private MutableLiveData<List<Post>> postList = new MutableLiveData<>();
@@ -61,15 +62,18 @@ public class SearchAndMoreViewModel extends ViewModel {
         collectionReference.orderBy(Constants.POST_TITLE).startAt(keyword).
                 endAt(keyword + "~").get()
                 .addOnCompleteListener(task -> {
+                    List<Post> posts = new ArrayList<>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
                             Post post = snapshot.toObject(Post.class);
+                            posts.add(post);
                             isSearchedDataFetched.setValue(true);
-                            searchedPost.getValue().add(post);
+
                         }
                     } else {
                         isSearchedDataFetched.setValue(false);
                     }
+                    postList.setValue(posts);
                 }).addOnFailureListener(e -> {
                     isSearchedDataFetched.setValue(false);
                 });
@@ -77,30 +81,29 @@ public class SearchAndMoreViewModel extends ViewModel {
             isListEmpty.setValue(true);
         } else {
             isListEmpty.setValue(false);
-            //all
         }
         return searchedPost;
     }
 
     public MutableLiveData<List<Post>> getListByCategory(String category) {
-        collectionReference.
-                get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-
-                    for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                        Post post = snapshot.toObject(Post.class);
-                        categoryPostList.getValue().add(post);
+        categoryPostList = new MutableLiveData<>(new ArrayList<>());
+        collectionReference.whereEqualTo(Constants.POST_CATEGORY, category)
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Post> postList = new ArrayList<>();
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            Post post = snapshot.toObject(Post.class);
+                            postList.add(post);
+                        }
+                        categoryPostList.setValue(postList); // Set the updated list
                         isCategoryPostsFetched.setValue(true);
+                    } else {
+                        isCategoryPostsFetched.setValue(false);
                     }
-                } else {
+                }).addOnFailureListener(e -> {
                     isCategoryPostsFetched.setValue(false);
-                }
-
-
-        }).addOnFailureListener(e -> {
-            isCategoryPostsFetched.setValue(false);
                     Log.d("LIST2", e.getMessage());
-        });
+                });
         return categoryPostList;
     }
 
