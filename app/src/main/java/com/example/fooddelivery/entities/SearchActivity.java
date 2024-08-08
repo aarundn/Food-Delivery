@@ -2,6 +2,7 @@ package com.example.fooddelivery.entities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,6 +24,8 @@ import com.example.fooddelivery.viewmodel.SearchAndMoreViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SearchActivity extends AppCompatActivity implements OnItemClickListener {
     private RecyclerView searchRecycler;
@@ -32,6 +35,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     private SearchAndMoreViewModel searchAndMoreViewModel;
     private List<Post> list;
     private ProgressBar searchProgressBar;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         searchAndMoreViewModel = new ViewModelProvider(this).get(SearchAndMoreViewModel.class);
         list = new ArrayList<>();
         searchAdapter = new SearchAdapter(this, getApplicationContext());
+        timer = new Timer();
 
         searchAndMoreViewModel.getAllPostList().observe(this, posts -> {
             searchAdapter.submitList(posts);
@@ -60,6 +65,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
                 searchProgressBar.setVisibility(View.GONE);
             }
         });
+
+
 
         setRecyclerView();
         setSearchBar();
@@ -87,14 +94,30 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
             @Override
             public void afterTextChanged(Editable s) {
 
+                android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
+                timer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {searchAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                },500);
+                searchProgressBar.setVisibility(View.VISIBLE);
                 searchAndMoreViewModel.searchPosts(s.toString()).observe(SearchActivity.this, postList -> {
                     searchAdapter.submitList(postList);
-                    searchAdapter.notifyDataSetChanged();
+
                 });
                 searchAndMoreViewModel.getIsSearchedDataFetched().observe(SearchActivity.this, isDataFetched -> {
 
                     if (isDataFetched) {
                         itemNotFound.setVisibility(View.GONE);
+                        searchProgressBar.setVisibility(View.GONE);
                         searchAdapter.notifyDataSetChanged();
                     } else {
                         searchAndMoreViewModel.getIsListEmpty().observe(SearchActivity.this, aBoolean -> {
@@ -102,6 +125,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
                                 if (aBoolean){
                                     itemNotFound.setVisibility(View.VISIBLE);
                                     searchAdapter.notifyDataSetChanged();
+                                    searchProgressBar.setVisibility(View.GONE);
                                 }
                             } else {
                                 itemNotFound.setVisibility(View.GONE);

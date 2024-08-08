@@ -58,6 +58,7 @@ public class SearchAndMoreViewModel extends ViewModel {
     }
 
     public LiveData<List<Post>> searchPosts(String keyword) {
+        isSearchedDataFetched.setValue(false);
         searchedPost = new MutableLiveData<>(new ArrayList<>());
         collectionReference.orderBy(Constants.POST_TITLE).startAt(keyword).
                 endAt(keyword + "~").get()

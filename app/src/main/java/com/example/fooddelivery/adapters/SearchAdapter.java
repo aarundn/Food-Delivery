@@ -116,33 +116,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.FoodViewHo
             return oldPost.equals(newPost);
         }
     };
-    android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
+
     public void searchPosts(final String searchKeyword){
 
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-                           @Override
-                           public void run() {
-                               List<Post> filteredList = new ArrayList<>();
-                               if (searchKeyword.trim().isEmpty()) {
-                                   filteredList = new ArrayList<>(postList);
-                               } else {
-                                   for (Post post : postList) {
-                                       if (post.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                                           filteredList.add(post);
-                                       }
-                                   }
-                               }
-                               mDiffer.submitList(filteredList);
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyDataSetChanged();
-                    }
-                });
-            }
-        },500);
     }
     public boolean isEmptyList(){
         if (mDiffer.getCurrentList().isEmpty()){
@@ -151,11 +128,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.FoodViewHo
         return false;
     }
 
-    public void cancelTimer(){
-        if (timer != null){
-            timer.cancel();
-        }
-    }
+
 
 
 }
