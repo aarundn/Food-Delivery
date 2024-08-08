@@ -9,11 +9,17 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fooddelivery.helper.Constants;
 import com.example.fooddelivery.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class UserViewModel extends ViewModel {
     private FirebaseAuth auth;
@@ -21,7 +27,10 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Boolean> isLogged = new MutableLiveData<>();
     private MutableLiveData<Boolean> isEmailAlreadyInUse = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> isSignedIn = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isUserInfoAdded = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> isResetPasswordSent = new MutableLiveData<>();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference userCollection = db.collection(Constants.USER_COLLECTION);
 
     public UserViewModel() {
         auth = FirebaseAuth.getInstance();
@@ -32,6 +41,9 @@ public class UserViewModel extends ViewModel {
     }
     public LiveData<Boolean> getIsResetPasswordSent(){
         return isResetPasswordSent;
+    }
+    public LiveData<Boolean> getIsUserInfoAdded(){
+        return isUserInfoAdded;
     }
 
     public LiveData<Boolean> getIsLogged() {
@@ -45,11 +57,21 @@ public class UserViewModel extends ViewModel {
     public void SignUpWithEmailAndPassword(String email, String password) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                isSignUpSuccessfully.setValue(true);
-                auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
-                        auth.signOut();
-                    }
+                User user = new User(auth.getCurrentUser().getUid(), email,password);
+                userCollection.document(user.getId())
+                        .set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                isSignUpSuccessfully.setValue(true);
+                                auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        auth.signOut();
+                                    }
+
+                        }).addOnFailureListener( e -> {
+
+                        });}
+
 
 
                 }).addOnFailureListener(e -> {
@@ -108,6 +130,11 @@ public class UserViewModel extends ViewModel {
                 }).addOnFailureListener( e -> {
                     isResetPasswordSent.setValue(false);
                 });
+    }
+
+    public void registerUserInfo(User user){
+
+
     }
     public LiveData<Boolean> getIsSignedIn() {
         return isSignedIn;

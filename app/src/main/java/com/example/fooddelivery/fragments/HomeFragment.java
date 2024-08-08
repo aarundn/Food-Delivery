@@ -186,6 +186,8 @@ public class HomeFragment extends Fragment implements HomeViewpagerOnClickListen
     public void OnItemClicked(int position) {
 
         Intent intent = new Intent(getContext(), FoodDetails.class);
+        intent.putExtra("id", filteredPosts.get(position).getId());
+        intent.putExtra("category", filteredPosts.get(position).getCategory());
         intent.putExtra("image",  filteredPosts.get(position).getImage());
         intent.putExtra("title",filteredPosts.get(position).getTitle());
         intent.putExtra("price",String.valueOf(filteredPosts.get(position).getPrice()));

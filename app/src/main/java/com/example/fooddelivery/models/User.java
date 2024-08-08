@@ -8,12 +8,6 @@ public class User {
     public User() {
     }
 
-    public User(String id, String emailAddress, String password) {
-        this.id = id;
-        this.emailAddress = emailAddress;
-        this.password = password;
-    }
-
     public String getId() {
         return id;
     }
@@ -21,6 +15,16 @@ public class User {
     public void setId(String id) {
         this.id = id;
     }
+
+    public User(String id, String emailAddress, String password) {
+        this.id = id;
+        this.emailAddress = emailAddress;
+        this.password = password;
+    }
+
+
+
+
 
     public String getEmailAddress() {
         return emailAddress;

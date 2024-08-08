@@ -18,11 +18,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.example.fooddelivery.R;
 import com.example.fooddelivery.entities.EmailVerificationActivity;
 import com.example.fooddelivery.entities.MainActivity;
+import com.example.fooddelivery.models.User;
 import com.example.fooddelivery.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Random;
 
 
 public class SignUpFragment extends Fragment {
@@ -63,6 +67,7 @@ public class SignUpFragment extends Fragment {
                 loadingInputsState(confirmPass);
                 userViewModel.SignUpWithEmailAndPassword(emailEdt.getText().toString().trim(), passwordEdt.getText().toString());
 
+
             } else {
                 registerProgressBar.setVisibility(View.GONE);
                 registerBtn.setText("register");
@@ -73,13 +78,13 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    registerProgressBar.setVisibility(View.GONE);
-                    registerBtn.setText("register");
-                    Intent intent = new Intent(requireActivity(), EmailVerificationActivity.class);
-                    intent.putExtra("email",emailEdt.getText().toString());
-                    intent.putExtra("password",passwordEdt.getText().toString());
-                    startActivity(intent);
-                    requireActivity().finish();
+                            registerProgressBar.setVisibility(View.GONE);
+                            registerBtn.setText("register");
+                            Intent intent = new Intent(requireActivity(), EmailVerificationActivity.class);
+                            intent.putExtra("email",emailEdt.getText().toString());
+                            intent.putExtra("password",passwordEdt.getText().toString());
+                            startActivity(intent);
+                            requireActivity().finish();
                 }
             }
         });

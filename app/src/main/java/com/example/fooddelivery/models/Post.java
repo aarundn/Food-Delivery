@@ -28,7 +28,8 @@ public class Post implements Serializable, Parcelable {
         this.id = id;
     }
 
-    public Post(String title, String image, String price, String category) {
+    public Post(String id,String title, String image, String price, String category) {
+        this.id = id;
         this.title = title;
         Image = image;
         this.price = price;
