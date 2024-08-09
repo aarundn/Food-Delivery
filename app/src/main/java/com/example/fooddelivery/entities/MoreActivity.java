@@ -77,6 +77,8 @@ public class MoreActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onItemClicked(int position, Post post) {
         Intent intent = new Intent(getApplicationContext(), FoodDetails.class);
+        intent.putExtra("id", post.getId());
+        intent.putExtra("category", post.getCategory());
         intent.putExtra("image", post.getImage());
         intent.putExtra("title", post.getTitle());
         intent.putExtra("price", String.valueOf(post.getPrice()));

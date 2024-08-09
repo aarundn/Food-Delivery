@@ -1,66 +1,97 @@
 package com.example.fooddelivery.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fooddelivery.R;
+import com.example.fooddelivery.adapters.AddToCartAdapter;
+import com.example.fooddelivery.adapters.CartAdapter;
+import com.example.fooddelivery.helper.MyButtonClickListener;
+import com.example.fooddelivery.helper.MySwipeHelper;
+import com.example.fooddelivery.viewmodel.DetailViewModel;
+
+import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoriteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FavoriteFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    public FavoriteFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FavoriteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FavoriteFragment newInstance(String param1, String param2) {
-        FavoriteFragment fragment = new FavoriteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private RecyclerView favRecyclerView;
+    private ImageView backButton;
+    private Button addToCartButton;
+    private DetailViewModel detailViewModel;
+    private AddToCartAdapter cartAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_favorite, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        favRecyclerView = view.findViewById(R.id.favRecyclerView);
+        addToCartButton = view.findViewById(R.id.favAddCartButton);
+        backButton = view.findViewById(R.id.favBackImage);
+
+        cartAdapter = new AddToCartAdapter(requireContext());
+        detailViewModel = new ViewModelProvider(requireActivity()).get(DetailViewModel.class);
+
+        detailViewModel.getAllSavedPost().observe(requireActivity(), postList -> {
+            cartAdapter.submitList(postList);
+            cartAdapter.notifyDataSetChanged();
+        });
+        setRecyclerView();
+        MySwipeHelper swipeHelper = new MySwipeHelper(getContext(), favRecyclerView, 150) {
+            @Override
+            public void initiatMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
+                buffer.add(new MySwipeHelper.MyButton(
+                        getContext(),
+                        R.drawable.ss_1,
+                        Color.parseColor("#00FFFFFF"),
+                        new MyButtonClickListener(){
+                            @Override
+                            public void onClick(int pos) {
+                                Toast.makeText(getContext(), "save Button clicked!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                ));
+                buffer.add(new MyButton(
+                        getContext(),
+                        R.drawable.d_1,
+                        Color.parseColor("#00FFFFFF"),
+                        new MyButtonClickListener(){
+                            @Override
+                            public void onClick(int pos) {
+                                Toast.makeText(getContext(), "delete Button clicked!", Toast.LENGTH_SHORT).show();
+                                System.out.println("hello");
+                            }
+                        }
+                ));
+            }
+        };
+    }
+
+    private void setRecyclerView() {
+        favRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity(),
+                LinearLayoutManager.VERTICAL,false));
+        favRecyclerView.setAdapter(cartAdapter);
     }
 }
