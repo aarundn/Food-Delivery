@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -18,15 +20,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.example.fooddelivery.R;
-import com.example.fooddelivery.entities.EmailVerificationActivity;
-import com.example.fooddelivery.entities.MainActivity;
-import com.example.fooddelivery.models.User;
 import com.example.fooddelivery.viewmodel.UserViewModel;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Random;
 
 
 public class SignUpFragment extends Fragment {
@@ -80,11 +75,13 @@ public class SignUpFragment extends Fragment {
                 if (aBoolean) {
                             registerProgressBar.setVisibility(View.GONE);
                             registerBtn.setText("register");
-                            Intent intent = new Intent(requireActivity(), EmailVerificationActivity.class);
-                            intent.putExtra("email",emailEdt.getText().toString());
-                            intent.putExtra("password",passwordEdt.getText().toString());
-                            startActivity(intent);
-                            requireActivity().finish();
+                            String email = emailEdt.getText().toString().trim();
+                            String password = passwordEdt.getText().toString().trim();
+                           Bundle bundle = new Bundle();
+                           bundle.putString("email", email);
+                           bundle.putString("password", password);
+                    Navigation.findNavController(view).
+                            navigate(R.id.action_loginFragment_to_emailVerificationFragment,bundle);
                 }
             }
         });

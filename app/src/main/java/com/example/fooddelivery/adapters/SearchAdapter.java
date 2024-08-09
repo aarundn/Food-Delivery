@@ -117,18 +117,4 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.FoodViewHo
         }
     };
 
-    public void searchPosts(final String searchKeyword){
-
-
-    }
-    public boolean isEmptyList(){
-        if (mDiffer.getCurrentList().isEmpty()){
-            return true;
-        }
-        return false;
-    }
-
-
-
-
 }

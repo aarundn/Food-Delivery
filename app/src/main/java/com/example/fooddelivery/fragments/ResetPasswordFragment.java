@@ -1,52 +1,66 @@
-package com.example.fooddelivery.entities;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+package com.example.fooddelivery.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fooddelivery.R;
+import com.example.fooddelivery.entities.LoginActivity;
 import com.example.fooddelivery.viewmodel.UserViewModel;
 
-public class ResetPasswordActivity extends AppCompatActivity {
+
+public class ResetPasswordFragment extends Fragment {
+
+
     private EditText emailEdt;
     private Button sendRestButton, backButton;
     private ProgressBar resetProgressBar;
     private UserViewModel userViewModel;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password);
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_reset_password, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        sendRestButton = findViewById(R.id.resetPassButton);
-        emailEdt = findViewById(R.id.resetPassEmailEdt);
-        resetProgressBar = findViewById(R.id.resetProgressBar);
-        backButton = findViewById(R.id.resetBackButton);
+        sendRestButton = view.findViewById(R.id.resetPassButton);
+        emailEdt = view.findViewById(R.id.resetPassEmailEdt);
+        resetProgressBar = view.findViewById(R.id.resetProgressBar);
+        backButton = view.findViewById(R.id.resetBackButton);
 
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-            startActivity(intent);
-            ResetPasswordActivity.this.finish();
+            Navigation.findNavController(view).navigate(R.id.action_resetPasswordFragment_to_loginFragment);
         });
 
-        userViewModel.getIsResetPasswordSent().observe(this, new Observer<Boolean>() {
+        userViewModel.getIsResetPasswordSent().observe(requireActivity(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isResetPasswordSent) {
                 if (isResetPasswordSent){
-                    Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                    Toast.makeText(ResetPasswordActivity.this,
+                    Intent intent = new Intent(requireActivity(), LoginActivity.class);
+                    Toast.makeText(requireActivity(),
                             "Password reset link was sent!", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
-                    ResetPasswordActivity.this.finish();
+                    requireActivity().finish();
                 }
             }
         });
@@ -60,12 +74,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 resetProgressBar.setVisibility(View.GONE);
                 sendRestButton.setText("send");
                 normalInputsState(emailEdt);
-                Toast.makeText(ResetPasswordActivity.this,
+                Toast.makeText(requireActivity(),
                         "your Password reset Failed!", Toast.LENGTH_SHORT).show();
 
             }
         });
-
     }
 
     private Boolean inputsCheck() {
@@ -73,7 +86,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             emailEdt.setError("please enter valid email format!!");
             return false;
         } else if (emailEdt.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "inputs must not be Empty!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "inputs must not be Empty!!", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

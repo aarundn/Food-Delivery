@@ -26,8 +26,8 @@ public class DetailViewModel extends ViewModel {
     private MutableLiveData<Boolean> isPostSaved = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> isPostExist = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> isPostUnsaved = new MutableLiveData<>(false);
-    MutableLiveData<List<AddToCart>> savedPostList = new MutableLiveData<>();
-
+    private MutableLiveData<List<AddToCart>> savedPostList = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isAllPostsGet = new MutableLiveData<>(false);
 
 
     public void addPostToCart(AddToCart postCart){
@@ -70,11 +70,12 @@ public class DetailViewModel extends ViewModel {
                 for (QueryDocumentSnapshot snapshot: task.getResult()){
                     AddToCart post = snapshot.toObject(AddToCart.class);
                     allPost.add(post);
+                    isAllPostsGet.setValue(true);
                 }
             }
             savedPostList.setValue(allPost);
         }).addOnFailureListener(e -> {
-
+            isAllPostsGet.setValue(false);
         });
         return savedPostList;
     }
@@ -91,6 +92,10 @@ public class DetailViewModel extends ViewModel {
 
         });
 
+    }
+
+    public LiveData<Boolean> getIsAllPostGet(){
+        return isAllPostsGet;
     }
 
     public LiveData<Boolean> getIsPostSaved(){

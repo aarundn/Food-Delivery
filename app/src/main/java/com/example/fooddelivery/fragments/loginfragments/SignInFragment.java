@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -20,10 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fooddelivery.R;
-import com.example.fooddelivery.entities.EmailVerificationActivity;
-import com.example.fooddelivery.entities.LoginActivity;
 import com.example.fooddelivery.entities.MainActivity;
-import com.example.fooddelivery.entities.ResetPasswordActivity;
 import com.example.fooddelivery.viewmodel.UserViewModel;
 
 public class SignInFragment extends Fragment {
@@ -86,8 +84,7 @@ public class SignInFragment extends Fragment {
         });
 
         forgotPasswordTxt.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), ResetPasswordActivity.class);
-            startActivity(intent);
+            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_resetPasswordFragment);
         });
     }
     private Boolean inputsCheck() {

@@ -8,6 +8,17 @@
     android:padding="8dp"
     tools:context=".fragments.FavoriteFragment">
 
+    <ProgressBar
+        android:id="@+id/favProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/orange"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
     <TextView
 
         android:id="@+id/textView2"
@@ -26,13 +37,13 @@
         android:id="@+id/titleFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="176dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="148dp"
         android:fontFamily="@font/sf_pro_rounded_semibold"
         android:text="Favorite"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/backImage"
+        app:layout_constraintBottom_toBottomOf="@+id/favBackImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,29 +75,11 @@
         android:id="@+id/favRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:foregroundGravity="center"
         android:layout_marginTop="8dp"
+        android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/favAddCartButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/butto_backgroud"
-        android:fontFamily="@font/sf_pro_rounded_semibold"
-        android:text="Add to cart"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
