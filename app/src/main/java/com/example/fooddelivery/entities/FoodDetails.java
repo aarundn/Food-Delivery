@@ -72,7 +72,7 @@ public class FoodDetails extends AppCompatActivity {
                         detailViewModel.removePost(new AddToCart(finalPost));
 
                     } else {
-                        detailViewModel.addPostToCart(new AddToCart(finalPost));
+                        detailViewModel.addPostToSave(new AddToCart(finalPost));
                         isLiked = true;
                         updateButtonState();
                         detailViewModel.getIsPostSaved().observe(this, isPostSaved -> {

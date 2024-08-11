@@ -1,4 +1,4 @@
-package com.example.fooddelivery.fragments;
+package com.example.fooddelivery.fragments.loginfragments;
 
 import android.content.Intent;
 import android.os.Bundle;

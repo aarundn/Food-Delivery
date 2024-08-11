@@ -61,9 +61,15 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
         });
     }
 
+
+
     @Override
     public int getItemCount() {
         return mDiffer.getCurrentList().size();
+    }
+
+    public List<AddToCart> getCurrentList() {
+        return mDiffer.getCurrentList();
     }
 
     public class CartViewHolder extends RecyclerView.ViewHolder {

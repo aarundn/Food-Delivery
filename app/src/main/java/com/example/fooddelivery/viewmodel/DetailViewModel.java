@@ -30,8 +30,8 @@ public class DetailViewModel extends ViewModel {
     private MutableLiveData<Boolean> isAllPostsGet = new MutableLiveData<>(false);
 
 
-    public void addPostToCart(AddToCart postCart){
-        DocumentReference postRf = userRf.document(auth.getCurrentUser().getUid()).collection(Constants.CART_COLLECTION_POST)
+    public void addPostToSave(AddToCart postCart){
+        DocumentReference postRf = userRf.document(auth.getCurrentUser().getUid()).collection(Constants.SAVE_COLLECTION_POST)
                 .document(postCart.getPost().getId());
         postRf.get().addOnSuccessListener( unused -> {
                     if (unused.exists()){
@@ -46,7 +46,7 @@ public class DetailViewModel extends ViewModel {
                 });
     }
     public void getSavedPost(AddToCart addToCart){
-        DocumentReference postRf = userRf.document(auth.getCurrentUser().getUid()).collection(Constants.CART_COLLECTION_POST)
+        DocumentReference postRf = userRf.document(auth.getCurrentUser().getUid()).collection(Constants.SAVE_COLLECTION_POST)
                 .document(addToCart.getPost().getId());
         postRf.get().addOnSuccessListener( documentSnapshot -> {
             if (documentSnapshot.exists()){
@@ -62,7 +62,7 @@ public class DetailViewModel extends ViewModel {
     public LiveData<List<AddToCart>> getAllSavedPost(){
         savedPostList = new MutableLiveData<>(new ArrayList<>());
         CollectionReference postRf = userRf.document(auth.getCurrentUser()
-                        .getUid()).collection(Constants.CART_COLLECTION_POST);
+                        .getUid()).collection(Constants.SAVE_COLLECTION_POST);
         postRf.get().addOnCompleteListener(task -> {
                 List<AddToCart> allPost = new ArrayList<>();
             if (task.isSuccessful()){
@@ -81,7 +81,7 @@ public class DetailViewModel extends ViewModel {
     }
     public void removePost(AddToCart addToCart){
         DocumentReference postRf =
-                userRf.document(auth.getCurrentUser().getUid()).collection(Constants.CART_COLLECTION_POST)
+                userRf.document(auth.getCurrentUser().getUid()).collection(Constants.SAVE_COLLECTION_POST)
                         .document(addToCart.getPost().getId());
         postRf.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()){

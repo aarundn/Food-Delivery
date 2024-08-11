@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,9 +26,11 @@ import com.example.fooddelivery.entities.FoodDetails;
 import com.example.fooddelivery.helper.MyButtonClickListener;
 import com.example.fooddelivery.helper.MySwipeHelper;
 import com.example.fooddelivery.listeners.OnItemClickListener;
+import com.example.fooddelivery.models.AddToCart;
 import com.example.fooddelivery.models.Post;
 import com.example.fooddelivery.viewmodel.DetailViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,6 +43,7 @@ public class FavoriteFragment extends Fragment implements OnItemClickListener {
     private DetailViewModel detailViewModel;
     private AddToCartAdapter cartAdapter;
     private ProgressBar progressBar;
+    private LinearLayout noSavedItemLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,18 +59,27 @@ public class FavoriteFragment extends Fragment implements OnItemClickListener {
         favRecyclerView = view.findViewById(R.id.favRecyclerView);
         backButton = view.findViewById(R.id.favBackImage);
         progressBar  = view.findViewById(R.id.favProgressBar);
-
-        cartAdapter = new AddToCartAdapter(requireContext(), this::onItemClicked);
+        noSavedItemLayout = view.findViewById(R.id.noItemSavedFound);
+        cartAdapter = new AddToCartAdapter(requireContext(), this);
         detailViewModel = new ViewModelProvider(requireActivity()).get(DetailViewModel.class);
 
         detailViewModel.getAllSavedPost().observe(requireActivity(), postList -> {
             cartAdapter.submitList(postList);
+            if (postList.isEmpty()){
+                progressBar.setVisibility(View.GONE);
+                noSavedItemLayout.setVisibility(View.VISIBLE);
+            }else {
+
+            }
             cartAdapter.notifyDataSetChanged();
         });
         progressBar.setVisibility(View.VISIBLE);
         detailViewModel.getIsAllPostGet().observe(requireActivity(), isAllPostGet -> {
             if (isAllPostGet){
                 progressBar.setVisibility(View.GONE);
+                noSavedItemLayout.setVisibility(View.GONE);
+            }else {
+
             }
         });
 
@@ -81,12 +94,26 @@ public class FavoriteFragment extends Fragment implements OnItemClickListener {
                         new MyButtonClickListener(){
                             @Override
                             public void onClick(int pos) {
+
+                                AddToCart post = cartAdapter.getCurrentList().get(pos);
+                                detailViewModel.removePost(post);
+                                List<AddToCart> currentList = new ArrayList<>(cartAdapter.getCurrentList());
+                                currentList.remove(pos);
+                                cartAdapter.submitList(currentList);
+                                cartAdapter.notifyItemRemoved(pos);
+                                cartAdapter.notifyDataSetChanged();
+                                if (currentList.isEmpty()){
+                                    noSavedItemLayout.setVisibility(View.VISIBLE);
+                                    cartAdapter.notifyDataSetChanged();
+                                }
                                 Toast.makeText(getContext(), "delete Button clicked!", Toast.LENGTH_SHORT).show();
+
                             }
                         }
                 ));
             }
         };
+
     }
 
     private void setRecyclerView() {

@@ -1,4 +1,4 @@
-package com.example.fooddelivery.fragments;
+package com.example.fooddelivery.fragments.loginfragments;
 
 import android.os.Bundle;
 
@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.example.fooddelivery.R;
+import com.example.fooddelivery.helper.SharedPreferences;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,6 +23,7 @@ public class GetStartedFragment extends Fragment {
 
     private Button getStartedButton;
     private ProgressBar progressBar;
+    private SharedPreferences preferences;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,7 +38,13 @@ public class GetStartedFragment extends Fragment {
         progressBar = view.findViewById(R.id.getStartedProgressBar);
         progressBar.setVisibility(View.GONE);
         NavController navController = Navigation.findNavController(view);
+        preferences = new SharedPreferences(requireContext());
+        if (preferences.getBoolean("isNotFirst")){
+            navController.navigate(R.id.action_getStartedFragment_to_loginFragment);
+        }
+
         getStartedButton.setOnClickListener(v -> {
+            preferences.putBoolean("isNotFirst", true);
             progressBar.setVisibility(View.VISIBLE);
             getStartedButton.setText("");
             navController.navigate(R.id.action_getStartedFragment_to_loginFragment);
@@ -47,10 +55,6 @@ public class GetStartedFragment extends Fragment {
         super.onStart();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-//        if (user != null){
-//            Intent intent  = new Intent(GetStartedActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            GetStartedActivity.this.finish();
-//        }
+
     }
 }

@@ -1,4 +1,4 @@
-package com.example.fooddelivery.fragments;
+package com.example.fooddelivery.fragments.loginfragments;
 
 import static android.content.Intent.getIntent;
 
