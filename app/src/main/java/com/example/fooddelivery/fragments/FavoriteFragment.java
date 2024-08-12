@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -20,8 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fooddelivery.R;
-import com.example.fooddelivery.adapters.AddToCartAdapter;
-import com.example.fooddelivery.adapters.CartAdapter;
+import com.example.fooddelivery.adapters.AddToSaveAdapter;
 import com.example.fooddelivery.entities.FoodDetails;
 import com.example.fooddelivery.helper.MyButtonClickListener;
 import com.example.fooddelivery.helper.MySwipeHelper;
@@ -41,7 +39,7 @@ public class FavoriteFragment extends Fragment implements OnItemClickListener {
     private RecyclerView favRecyclerView;
     private ImageView backButton;
     private DetailViewModel detailViewModel;
-    private AddToCartAdapter cartAdapter;
+    private AddToSaveAdapter cartAdapter;
     private ProgressBar progressBar;
     private LinearLayout noSavedItemLayout;
 
@@ -60,7 +58,7 @@ public class FavoriteFragment extends Fragment implements OnItemClickListener {
         backButton = view.findViewById(R.id.favBackImage);
         progressBar  = view.findViewById(R.id.favProgressBar);
         noSavedItemLayout = view.findViewById(R.id.noItemSavedFound);
-        cartAdapter = new AddToCartAdapter(requireContext(), this);
+        cartAdapter = new AddToSaveAdapter(requireContext(), this);
         detailViewModel = new ViewModelProvider(requireActivity()).get(DetailViewModel.class);
 
         detailViewModel.getAllSavedPost().observe(requireActivity(), postList -> {

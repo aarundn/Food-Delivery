@@ -16,32 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.fooddelivery.R;
-import com.example.fooddelivery.adapters.CartAdapter;
+import com.example.fooddelivery.adapters.AddToCartAdapter;
 import com.example.fooddelivery.helper.MyButtonClickListener;
 import com.example.fooddelivery.helper.MySwipeHelper;
-import com.example.fooddelivery.models.Post;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class CardFragment extends Fragment {
     private RecyclerView cartRecyclerView;
     private ImageView backImage;
-    private CartAdapter cartAdapter;
+    private AddToCartAdapter cartAdapter;
 
-    public CardFragment() {
-        // Required empty public constructor
-    }
-
-
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
