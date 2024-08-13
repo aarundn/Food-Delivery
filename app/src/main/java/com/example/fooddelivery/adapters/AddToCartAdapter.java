@@ -22,15 +22,17 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.CartViewHolder> {
     private List<AddToCart> postList;
     Context context;
-
+    private String counting;
     private final AsyncListDiffer<AddToCart> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
     public void submitList(List<AddToCart> list) {
         mDiffer.submitList(list);
         postList = new ArrayList<>(list);
+        counting = null;
 
     }
 
@@ -52,6 +54,29 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         holder.setCartList(mDiffer.getCurrentList().get(position), context);
 
+        holder.cartPlusSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int counter = Integer.parseInt(holder.cartCounter.getText().toString());
+                counter++;
+                holder.cartCounter.setText(String.valueOf(counter));
+                counting = holder.cartCounter.getText().toString();
+            }
+        });
+        holder.cartMinusSign.setOnClickListener(v -> {
+            int counter = Integer.parseInt(holder.cartCounter.getText().toString());
+            if (counter > 1){
+                counter--;
+                holder.cartCounter.setText(String.valueOf(counter));
+                counting = holder.cartCounter.getText().toString();
+            }
+
+        });
+
+    }
+
+    public String getCounting(){
+        return counting;
     }
 
     @Override
@@ -73,13 +98,20 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
             cartPlusSign = itemView.findViewById(R.id.plusSignCartTv);
             cartMinusSign = itemView.findViewById(R.id.minusSignCartTv);
             cartCounter = itemView.findViewById(R.id.counterCartTv);
+
+
         }
+
+
+
         void setCartList(AddToCart post, Context context){
             Glide.with(context).load(post.getPost().getImage()).into(cartImage);
             cartTitle.setText(post.getPost().getTitle());
             cartPrice.setText(post.getPost().getPrice());
         }
     }
+
+
     public static final DiffUtil.ItemCallback<AddToCart> DIFF_CALLBACK
             = new DiffUtil.ItemCallback<AddToCart>() {
         @Override
