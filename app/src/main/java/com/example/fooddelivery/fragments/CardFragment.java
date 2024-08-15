@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -26,26 +27,40 @@ import com.example.fooddelivery.listeners.OnItemQuantityListener;
 import com.example.fooddelivery.viewmodel.AddToCartViewModel;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class CardFragment extends Fragment implements OnItemQuantityListener {
     private RecyclerView cartRecyclerView;
     private ImageView backImage;
     private AddToCartAdapter cartAdapter;
-    private ProgressBar proceedProgressBar;
+    private ProgressBar proceedProgressBar, cartProgressBar;
     private Button proceedButton;
     private AddToCartViewModel addToCartViewModel;
+    private LinearLayout noItemFoundInCart;
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_card, container, false);
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         cartRecyclerView = view.findViewById(R.id.cartRecyclerView);
         backImage = view.findViewById(R.id.backImage);
+        proceedProgressBar = view.findViewById(R.id.proceedProgressBar);
+        proceedButton = view.findViewById(R.id.proceedButton);
+        cartProgressBar = view.findViewById(R.id.cartProgressBar);
+        noItemFoundInCart = view.findViewById(R.id.noItemInCartFound);
         cartAdapter = new AddToCartAdapter(requireContext(), this);
         addToCartViewModel = new ViewModelProvider(requireActivity()).get(AddToCartViewModel.class);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         cartRecyclerView.setAdapter(cartAdapter);
+        cartProgressBar.setVisibility(View.VISIBLE);
+        noItemFoundInCart.setVisibility(View.GONE);
         getAllPostsToCart();
 
 
@@ -82,17 +97,31 @@ public class CardFragment extends Fragment implements OnItemQuantityListener {
     }
 
     private void getAllPostsToCart() {
+        AtomicReference<Boolean> empty = new AtomicReference<>(false);
+        cartProgressBar.setVisibility(View.VISIBLE);
         addToCartViewModel.getAllCartPost().observe(requireActivity(), posts -> {
             cartAdapter.submitList(posts);
+            if (posts.isEmpty()){
+                noItemFoundInCart.setVisibility(View.VISIBLE);
+                cartProgressBar.setVisibility(View.GONE);
+            }
+        });
+        addToCartViewModel.getIsAllPostGet().observe(requireActivity(), isAllPostGet -> {
+            if (isAllPostGet){
+                cartProgressBar.setVisibility(View.GONE);
+                noItemFoundInCart.setVisibility(View.GONE);
+            }else {
+                    cartProgressBar.setVisibility(View.GONE);
+                    noItemFoundInCart.setVisibility(View.GONE);
+                    if (isAdded()) {
+                        Toast.makeText(requireActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    }
+
+            }
         });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card, container, false);
-    }
+
 
     @Override
     public void onQuantityListener(String docId, int quantity) {

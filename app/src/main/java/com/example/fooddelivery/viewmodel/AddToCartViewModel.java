@@ -53,6 +53,8 @@ public class AddToCartViewModel extends ViewModel {
                     allPost.add(post);
                     isAllPostGet.setValue(true);
                 }
+            } else {
+                isAllPostGet.setValue(false);
             }
             allCartPost.setValue(allPost);
         }).addOnFailureListener(e -> {
