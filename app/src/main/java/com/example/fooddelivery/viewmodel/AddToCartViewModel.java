@@ -11,6 +11,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,27 @@ public class AddToCartViewModel extends ViewModel {
         });
         return allCartPost;
     }
+
+    public void updateQuantity(String documentId, int delta) {
+        DocumentReference cartItemRef = userRf.document(auth.getCurrentUser().getUid())
+                .collection(Constants.CART_COLLECTION_POST).document(documentId);
+
+        db.runTransaction((Transaction.Function<Void>) transaction -> {
+            AddToCart cartItem = transaction.get(cartItemRef).toObject(AddToCart.class);
+            if (cartItem != null) {
+                int newQuantity = cartItem.getQuantity() + delta;
+                if (newQuantity > 0) {  // Ensure quantity doesn't go below 1
+                    transaction.update(cartItemRef, "quantity", newQuantity);
+                }
+            }
+            return null;
+        }).addOnSuccessListener(aVoid -> {
+            // Transaction successful, handle success (e.g., notify observers)
+        }).addOnFailureListener(e -> {
+            // Handle transaction failure
+        });
+    }
+
     public LiveData<Boolean> getIsPostAddedToCart(){
         return isPostAddedToCart;
     }

@@ -64,7 +64,7 @@ public class FoodDetails extends AppCompatActivity {
         Post finalPost = post;
         setAddToCartButton(finalPost);
         isLiked = false;
-        detailViewModel.getSavedPost(new AddToCart(finalPost));
+        detailViewModel.getSavedPost(new AddToCart(finalPost, 1));
         detailViewModel.getIsPostExist().observe(this, isPostExist -> {
             if (isPostExist) {
                 isLiked = true;
@@ -76,10 +76,10 @@ public class FoodDetails extends AppCompatActivity {
                     if (isLiked) {
                         isLiked =false;
                         updateButtonState();
-                        detailViewModel.removePost(new AddToCart(finalPost));
+                        detailViewModel.removePost(new AddToCart(finalPost, 1));
 
                     } else {
-                        detailViewModel.addPostToSave(new AddToCart(finalPost));
+                        detailViewModel.addPostToSave(new AddToCart(finalPost, 1));
                         isLiked = true;
                         updateButtonState();
                         detailViewModel.getIsPostSaved().observe(this, isPostSaved -> {
@@ -99,7 +99,7 @@ public class FoodDetails extends AppCompatActivity {
         addCartButton.setOnClickListener(v -> {
             addCartButton.setText("");
             cartProgress.setVisibility(View.VISIBLE);
-            toCartViewModel.addPostToCart(new AddToCart(post));
+            toCartViewModel.addPostToCart(new AddToCart(post, 1));
         });
         toCartViewModel.getIsPostAddedToCart().observe(this, isPostAddedToCart -> {
             if (isPostAddedToCart){

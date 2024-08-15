@@ -4,9 +4,20 @@ import androidx.annotation.Nullable;
 
 public class AddToCart {
     private Post post;
+    private String Id;
+    private int quantity;
 
-    public AddToCart(Post post) {
+    public AddToCart(Post post, int quantity) {
         this.post = post;
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Post getPost() {

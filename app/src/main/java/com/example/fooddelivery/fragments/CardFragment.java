@@ -22,12 +22,13 @@ import com.example.fooddelivery.R;
 import com.example.fooddelivery.adapters.AddToCartAdapter;
 import com.example.fooddelivery.helper.MyButtonClickListener;
 import com.example.fooddelivery.helper.MySwipeHelper;
+import com.example.fooddelivery.listeners.OnItemQuantityListener;
 import com.example.fooddelivery.viewmodel.AddToCartViewModel;
 
 import java.util.List;
 
 
-public class CardFragment extends Fragment {
+public class CardFragment extends Fragment implements OnItemQuantityListener {
     private RecyclerView cartRecyclerView;
     private ImageView backImage;
     private AddToCartAdapter cartAdapter;
@@ -41,7 +42,7 @@ public class CardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         cartRecyclerView = view.findViewById(R.id.cartRecyclerView);
         backImage = view.findViewById(R.id.backImage);
-        cartAdapter = new AddToCartAdapter(requireContext());
+        cartAdapter = new AddToCartAdapter(requireContext(), this);
         addToCartViewModel = new ViewModelProvider(requireActivity()).get(AddToCartViewModel.class);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         cartRecyclerView.setAdapter(cartAdapter);
@@ -93,4 +94,8 @@ public class CardFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_card, container, false);
     }
 
+    @Override
+    public void onQuantityListener(String docId, int quantity) {
+        addToCartViewModel.updateQuantity(docId, quantity);
+    }
 }

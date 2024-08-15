@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.fooddelivery.R;
+import com.example.fooddelivery.listeners.OnItemQuantityListener;
 import com.example.fooddelivery.models.AddToCart;
 import com.example.fooddelivery.models.Post;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -28,16 +30,20 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
     private List<AddToCart> postList;
     Context context;
     private String counting;
+    private OnItemQuantityListener listener;
+
     private final AsyncListDiffer<AddToCart> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
     public void submitList(List<AddToCart> list) {
         mDiffer.submitList(list);
         postList = new ArrayList<>(list);
+
         counting = null;
 
     }
 
-    public AddToCartAdapter(Context context) {
+    public AddToCartAdapter(Context context, OnItemQuantityListener listener) {
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -52,6 +58,7 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
+        AddToCart addToCart = postList.get(position);
         holder.setCartList(mDiffer.getCurrentList().get(position), context);
 
         holder.cartPlusSign.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +68,7 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
                 counter++;
                 holder.cartCounter.setText(String.valueOf(counter));
                 counting = holder.cartCounter.getText().toString();
+                listener.onQuantityListener(addToCart.getPost().getId(), 1);
             }
         });
         holder.cartMinusSign.setOnClickListener(v -> {
@@ -69,11 +77,14 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
                 counter--;
                 holder.cartCounter.setText(String.valueOf(counter));
                 counting = holder.cartCounter.getText().toString();
+                listener.onQuantityListener(addToCart.getPost().getId(),-1);
             }
 
         });
 
     }
+
+
 
     public String getCounting(){
         return counting;
@@ -108,6 +119,7 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
             Glide.with(context).load(post.getPost().getImage()).into(cartImage);
             cartTitle.setText(post.getPost().getTitle());
             cartPrice.setText(post.getPost().getPrice());
+            cartCounter.setText(String.valueOf(post.getQuantity()));
         }
     }
 
