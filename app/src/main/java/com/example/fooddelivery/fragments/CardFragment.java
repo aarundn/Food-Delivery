@@ -24,8 +24,10 @@ import com.example.fooddelivery.adapters.AddToCartAdapter;
 import com.example.fooddelivery.helper.MyButtonClickListener;
 import com.example.fooddelivery.helper.MySwipeHelper;
 import com.example.fooddelivery.listeners.OnItemQuantityListener;
+import com.example.fooddelivery.models.AddToCart;
 import com.example.fooddelivery.viewmodel.AddToCartViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -60,25 +62,13 @@ public class CardFragment extends Fragment implements OnItemQuantityListener {
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         cartRecyclerView.setAdapter(cartAdapter);
         cartProgressBar.setVisibility(View.VISIBLE);
-        noItemFoundInCart.setVisibility(View.GONE);
         getAllPostsToCart();
 
 
         MySwipeHelper swipeHelper = new MySwipeHelper(getContext(), cartRecyclerView, 150) {
             @Override
             public void initiatMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
-                buffer.add(new MySwipeHelper.MyButton(
-                        getContext(),
-                        R.drawable.ss_1,
-                        Color.parseColor("#00FFFFFF"),
-                        new MyButtonClickListener(){
-                            @Override
-                            public void onClick(int pos) {
 
-                                Toast.makeText(getContext(), "save Button clicked!"+ cartAdapter.getCounting(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                ));
                 buffer.add(new MyButton(
                         getContext(),
                         R.drawable.d_1,
@@ -86,8 +76,18 @@ public class CardFragment extends Fragment implements OnItemQuantityListener {
                         new MyButtonClickListener(){
                             @Override
                             public void onClick(int pos) {
-                                Toast.makeText(getContext(), "delete Button clicked!", Toast.LENGTH_SHORT).show();
-                                System.out.println("hello");
+                                if (pos >= 0 && pos < cartAdapter.getCurrentList().size()) {
+                                    AddToCart post = cartAdapter.getCurrentList().get(pos);
+                                    addToCartViewModel.removeFromCart(post);
+                                    List<AddToCart> currentList = new ArrayList<>(cartAdapter.getCurrentList());
+                                    currentList.remove(pos);
+                                    cartAdapter.submitList(currentList);
+                                    cartAdapter.notifyItemChanged(pos);
+                                    cartAdapter.notifyDataSetChanged();
+                                    if (currentList.isEmpty()){
+                                        noItemFoundInCart.setVisibility(View.VISIBLE);
+                                    }
+                                }
                             }
                         }
                 ));
@@ -97,12 +97,14 @@ public class CardFragment extends Fragment implements OnItemQuantityListener {
     }
 
     private void getAllPostsToCart() {
-        AtomicReference<Boolean> empty = new AtomicReference<>(false);
         cartProgressBar.setVisibility(View.VISIBLE);
         addToCartViewModel.getAllCartPost().observe(requireActivity(), posts -> {
-            cartAdapter.submitList(posts);
+
             if (posts.isEmpty()){
                 noItemFoundInCart.setVisibility(View.VISIBLE);
+                cartProgressBar.setVisibility(View.GONE);
+            }else {
+                cartAdapter.submitList(posts);
                 cartProgressBar.setVisibility(View.GONE);
             }
         });
@@ -111,17 +113,18 @@ public class CardFragment extends Fragment implements OnItemQuantityListener {
                 cartProgressBar.setVisibility(View.GONE);
                 noItemFoundInCart.setVisibility(View.GONE);
             }else {
-                    cartProgressBar.setVisibility(View.GONE);
+                    cartProgressBar.setVisibility(View.VISIBLE);
                     noItemFoundInCart.setVisibility(View.GONE);
-                    if (isAdded()) {
-                        Toast.makeText(requireActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
-                    }
 
             }
         });
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        noItemFoundInCart.setVisibility(View.GONE);
+    }
 
     @Override
     public void onQuantityListener(String docId, int quantity) {

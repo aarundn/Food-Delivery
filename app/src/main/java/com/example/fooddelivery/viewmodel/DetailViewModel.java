@@ -73,6 +73,9 @@ public class DetailViewModel extends ViewModel {
                     isAllPostsGet.setValue(true);
                 }
             }
+            {
+                isAllPostsGet.setValue(false);
+            }
             savedPostList.setValue(allPost);
         }).addOnFailureListener(e -> {
             isAllPostsGet.setValue(false);

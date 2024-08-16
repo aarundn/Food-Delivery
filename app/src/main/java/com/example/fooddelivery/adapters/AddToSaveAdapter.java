@@ -30,8 +30,6 @@ public class AddToSaveAdapter extends RecyclerView.Adapter<AddToSaveAdapter.Cart
 
     public void submitList(List<AddToCart> list) {
         mDiffer.submitList(list);
-
-
     }
 
     public AddToSaveAdapter(Context context, OnItemClickListener onItemClicked) {

@@ -46,6 +46,8 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
         this.listener = listener;
     }
 
+
+
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,9 +60,8 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        AddToCart addToCart = postList.get(position);
-        holder.setCartList(mDiffer.getCurrentList().get(position), context);
 
+        holder.setCartList(mDiffer.getCurrentList().get(position), context);
         holder.cartPlusSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +69,7 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
                 counter++;
                 holder.cartCounter.setText(String.valueOf(counter));
                 counting = holder.cartCounter.getText().toString();
-                listener.onQuantityListener(addToCart.getPost().getId(), 1);
+                listener.onQuantityListener(mDiffer.getCurrentList().get(position).getPost().getId(), 1);
             }
         });
         holder.cartMinusSign.setOnClickListener(v -> {
@@ -77,7 +78,7 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
                 counter--;
                 holder.cartCounter.setText(String.valueOf(counter));
                 counting = holder.cartCounter.getText().toString();
-                listener.onQuantityListener(addToCart.getPost().getId(),-1);
+                listener.onQuantityListener(mDiffer.getCurrentList().get(position).getPost().getId(),-1);
             }
 
         });
@@ -86,9 +87,6 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
 
 
 
-    public String getCounting(){
-        return counting;
-    }
 
     @Override
     public int getItemCount() {
@@ -140,4 +138,8 @@ public class AddToCartAdapter extends RecyclerView.Adapter<AddToCartAdapter.Cart
             return oldPost.equals(newPost);
         }
     };
+
+    public List<AddToCart> getCurrentList() {
+        return mDiffer.getCurrentList();
+    }
 }

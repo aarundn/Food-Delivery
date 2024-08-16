@@ -23,7 +23,7 @@ public class AddToCartViewModel extends ViewModel {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private MutableLiveData<Boolean> isPostAddedToCart = new MutableLiveData<>();
     private MutableLiveData<List<AddToCart>> allCartPost = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isAllPostGet = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isAllPostGet = new MutableLiveData<>(false);
 
     public void addPostToCart(AddToCart toCart){
         DocumentReference postRf = userRf.document(auth.getCurrentUser().getUid()).collection(Constants.CART_COLLECTION_POST)
@@ -81,6 +81,17 @@ public class AddToCartViewModel extends ViewModel {
         }).addOnFailureListener(e -> {
             // Handle transaction failure
         });
+    }
+
+    public void removeFromCart(AddToCart cart){
+        DocumentReference postRf = userRf.document(auth.getCurrentUser()
+                .getUid()).collection(Constants.CART_COLLECTION_POST).document(cart.getPost().getId());
+        postRf.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()){
+                postRf.delete();
+            }
+        });
+
     }
 
     public LiveData<Boolean> getIsPostAddedToCart(){

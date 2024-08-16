@@ -60,24 +60,24 @@ public class FavoriteFragment extends Fragment implements OnItemClickListener {
         noSavedItemLayout = view.findViewById(R.id.noItemSavedFound);
         cartAdapter = new AddToSaveAdapter(requireContext(), this);
         detailViewModel = new ViewModelProvider(requireActivity()).get(DetailViewModel.class);
-
         detailViewModel.getAllSavedPost().observe(requireActivity(), postList -> {
+            progressBar.setVisibility(View.VISIBLE);
             cartAdapter.submitList(postList);
             if (postList.isEmpty()){
                 progressBar.setVisibility(View.GONE);
                 noSavedItemLayout.setVisibility(View.VISIBLE);
             }else {
-
+                progressBar.setVisibility(View.GONE);
             }
             cartAdapter.notifyDataSetChanged();
         });
-        progressBar.setVisibility(View.VISIBLE);
         detailViewModel.getIsAllPostGet().observe(requireActivity(), isAllPostGet -> {
             if (isAllPostGet){
                 progressBar.setVisibility(View.GONE);
                 noSavedItemLayout.setVisibility(View.GONE);
             }else {
-
+                progressBar.setVisibility(View.VISIBLE);
+                noSavedItemLayout.setVisibility(View.GONE);
             }
         });
 
@@ -118,6 +118,20 @@ public class FavoriteFragment extends Fragment implements OnItemClickListener {
         favRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity(),
                 LinearLayoutManager.VERTICAL,false));
         favRecyclerView.setAdapter(cartAdapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        cartAdapter.notifyDataSetChanged();
+        noSavedItemLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressBar.setVisibility(View.GONE);
+        noSavedItemLayout.setVisibility(View.GONE);
     }
 
     @Override
