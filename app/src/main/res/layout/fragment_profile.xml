@@ -29,7 +29,7 @@
         android:fontFamily="@font/sf_pro_rounded_bold"
         android:text="Personal details"
         android:textColor="@color/black"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
@@ -37,14 +37,15 @@
         android:id="@+id/change_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="Change"
         android:textColor="@color/orange"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
-        android:layout_marginEnd="26dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView8" />
+        app:layout_constraintTop_toTopOf="@+id/textView8"
+        app:layout_constraintVertical_bias="0.444" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -75,10 +76,12 @@
             android:layout_marginStart="15dp"
             android:orientation="vertical">
 
-            <TextView
+            <EditText
                 android:id="@+id/userNameProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="add your name"
+                android:background="@android:color/transparent"
                 android:fontFamily="@font/sf_pro_rounded_bold"
                 android:text="Haroun Debchoune"
                 android:textColor="@color/black"
@@ -100,10 +103,11 @@
                 android:layout_marginBottom="5dp"
                 android:background="@color/secondItemsAndIcons" />
 
-            <TextView
+            <EditText
                 android:id="@+id/userNumberProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:text="+213 0667214923"
                 android:textColor="@color/secondItemsAndIcons"
@@ -116,11 +120,12 @@
                 android:layout_marginBottom="5dp"
                 android:background="@color/secondItemsAndIcons" />
 
-            <TextView
-                android:id="@+id/userAdressProfile"
+            <EditText
+                android:id="@+id/userAddressProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sf_pro_text_regular"
+                android:background="@android:color/transparent"
                 android:text="@string/adress"
                 android:textColor="@color/secondItemsAndIcons"
                 android:textSize="12sp" />
@@ -263,5 +268,35 @@
             android:src="@drawable/chevron_left" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/updateButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/helpLayout">
+
+        <ProgressBar
+            android:id="@+id/profileProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="5dp"
+            android:indeterminateTint="@color/white"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/updateButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:background="@drawable/butto_backgroud"
+            android:fontFamily="@font/sf_pro_rounded_semibold"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

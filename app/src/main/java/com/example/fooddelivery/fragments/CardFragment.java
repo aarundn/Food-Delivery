@@ -115,7 +115,6 @@ public class CardFragment extends Fragment implements OnItemQuantityListener {
             }else {
                     cartProgressBar.setVisibility(View.VISIBLE);
                     noItemFoundInCart.setVisibility(View.GONE);
-
             }
         });
     }
