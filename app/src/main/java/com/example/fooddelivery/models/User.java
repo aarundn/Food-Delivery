@@ -4,6 +4,24 @@ public class User {
     private String id;
     private String emailAddress;
     private String password;
+    private String ImagePath;
+    private String PhoneNumber;
+
+    public String getImagePath() {
+        return ImagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        ImagePath = imagePath;
+    }
+
+    public String getPhoneNumber() {
+        return PhoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
+    }
 
     public User() {
     }
@@ -16,13 +34,13 @@ public class User {
         this.id = id;
     }
 
-    public User(String id, String emailAddress, String password) {
+    public User(String id, String emailAddress, String password, String imagePath, String phoneNumber) {
         this.id = id;
         this.emailAddress = emailAddress;
         this.password = password;
+        ImagePath = imagePath;
+        PhoneNumber = phoneNumber;
     }
-
-
 
 
 
