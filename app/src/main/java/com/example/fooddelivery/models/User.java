@@ -2,10 +2,28 @@ package com.example.fooddelivery.models;
 
 public class User {
     private String id;
+    private String userName;
     private String emailAddress;
+    private String address;
     private String password;
     private String ImagePath;
     private String PhoneNumber;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getImagePath() {
         return ImagePath;
@@ -34,12 +52,14 @@ public class User {
         this.id = id;
     }
 
-    public User(String id, String emailAddress, String password, String imagePath, String phoneNumber) {
+    public User(String id, String emailAddress, String password, String imagePath, String phoneNumber, String userName, String address) {
         this.id = id;
+        this.userName = userName;
         this.emailAddress = emailAddress;
+        this.address = address;
         this.password = password;
-        ImagePath = imagePath;
-        PhoneNumber = phoneNumber;
+        this.ImagePath = imagePath;
+        this.PhoneNumber = phoneNumber;
     }
 
 

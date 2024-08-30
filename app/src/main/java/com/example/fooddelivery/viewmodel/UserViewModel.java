@@ -57,7 +57,7 @@ public class UserViewModel extends ViewModel {
     public void SignUpWithEmailAndPassword(String email, String password) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                User user = new User(auth.getCurrentUser().getUid(), email,password,"","");
+                User user = new User(auth.getCurrentUser().getUid(), email,password,"","","","");
                 userCollection.document(user.getId())
                         .set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

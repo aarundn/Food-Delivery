@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.fooddelivery.R;
 import com.example.fooddelivery.databinding.FragmentProfileBinding;
 import com.example.fooddelivery.viewmodel.ProfileViewModel;
@@ -43,8 +44,32 @@ public class profileFragment extends Fragment {
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         profileViewModel.getGetUserInfo().observe(requireActivity(), userInfo -> {
-            binding.userNameProfile.setText("Haroun");
+            binding.userNameProfile.setText(userInfo.getUserName());
             binding.userEmailProfile.setText(userInfo.getEmailAddress());
+            binding.userNumberProfile.setText(userInfo.getPhoneNumber());
+            binding.userAddressProfile.setText(userInfo.getAddress());
+            Glide.with(requireActivity()).load(userInfo.getImagePath()).into(binding.profileImage);
+            inputsState(false, binding.userNameProfile);
+            inputsState(false, binding.userNumberProfile);
+            inputsState(false, binding.userAddressProfile);
+        });
+        binding.changeText.setOnClickListener(v -> {
+            inputsState(true, binding.userNameProfile);
+            inputsState(true, binding.userNumberProfile);
+            inputsState(true, binding.userAddressProfile);
+            binding.changeText.setText("save");
         });
     }
+
+    private void inputsState(boolean b, EditText editText) {
+        if (b){
+           editText.setFocusable(true);
+           editText.setFocusableInTouchMode(true);
+        } else {
+            editText.setFocusable(false);
+            editText.setFocusableInTouchMode(false);
+        }
+    }
+
+
 }
