@@ -62,7 +62,12 @@ public class User {
         this.PhoneNumber = phoneNumber;
     }
 
-
+    public User(String userName, String address, String imagePath, String phoneNumber) {
+        this.ImagePath = imagePath;
+        this.PhoneNumber = phoneNumber;
+        this.userName = userName;
+        this.address = address;
+    }
 
     public String getEmailAddress() {
         return emailAddress;

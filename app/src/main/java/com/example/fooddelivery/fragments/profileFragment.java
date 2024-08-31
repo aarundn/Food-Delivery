@@ -45,23 +45,24 @@ public class profileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-        User user = new User();
-        profileViewModel.getGetUserInfo().observe(requireActivity(), new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
 
-                binding.userNameProfile.setText(user.getUserName());
-                binding.userEmailProfile.setText(user.getEmailAddress());
-                binding.userNumberProfile.setText(user.getPhoneNumber());
-                binding.userAddressProfile.setText(user.getAddress());
-                Glide.with(requireActivity()).load(user.getImagePath()).into(binding.profileImage);
-                user = new User(user.getId(), user.getEmailAddress(), user.getPassword(),
-                        user.getImagePath(), user.getPhoneNumber(), user.getUserName(), user.getAddress());
-                inputsState(false, binding.userNameProfile);
-                inputsState(false, binding.userNumberProfile);
-                inputsState(false, binding.userAddressProfile);
-            }
-        });
+        inputsState(false, binding.userNameProfile);
+        inputsState(false, binding.userNumberProfile);
+        inputsState(false, binding.userAddressProfile);
+        profileViewModel.getGetUserInfo();
+                 profileViewModel.getUserInfo.observe(requireActivity(), user ->{
+                    binding.userNameProfile.setText(user.getUserName());
+                    binding.userEmailProfile.setText(user.getEmailAddress());
+                    binding.userNumberProfile.setText(user.getPhoneNumber());
+                    binding.userAddressProfile.setText(user.getAddress());
+                    if (isAdded()){
+                        Glide.with(requireActivity()).load(user.getImagePath()).into(binding.profileImage);
+                    }
+                    inputsState(false, binding.userNameProfile);
+                    inputsState(false, binding.userNumberProfile);
+                    inputsState(false, binding.userAddressProfile);
+                }
+                );
         binding.changeText.setOnClickListener(v -> {
             inputsState(true, binding.userNameProfile);
             inputsState(true, binding.userNumberProfile);
@@ -69,6 +70,8 @@ public class profileFragment extends Fragment {
             binding.changeText.setText("save");
             binding.changeText.setOnClickListener(v1 -> {
                 if (inputsCheck()){
+                    User user = new User(binding.userNameProfile.getText().toString(),binding.userAddressProfile.getText().toString(),
+                            "",binding.userNumberProfile.getText().toString());
                     profileViewModel.modifyUserInfo(user);
                     profileViewModel.getIsUserAdded().observe(requireActivity(), isAdded -> {
                         if (isAdded){
