@@ -102,6 +102,8 @@ public class profileFragment extends Fragment {
                     selectProfileImagesActivityResult.launch(intent);
                 });
             } else if (buttonText.equals("Save")) {
+                binding.changeProgressBar.setVisibility(View.VISIBLE);
+                binding.changeText.setVisibility(View.INVISIBLE);
                 if (inputsCheck()) {
                     profileViewModel.getIsImageProfileAdded().observe(requireActivity(), isImageAdded -> {
                         if (isImageAdded) {
@@ -118,6 +120,8 @@ public class profileFragment extends Fragment {
                     });
                     profileViewModel.getIsUserAdded().observe(requireActivity(), isUserSaved -> {
                         if (isUserSaved) {
+                            binding.changeProgressBar.setVisibility(View.GONE);
+                            binding.changeText.setVisibility(View.VISIBLE);
                             binding.changeText.setText("Change");
                             setInputsEditable(false);
                         }
