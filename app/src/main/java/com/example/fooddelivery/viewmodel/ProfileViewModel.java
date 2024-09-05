@@ -63,18 +63,23 @@ public class ProfileViewModel extends ViewModel {
 
     public void modifyUserInfo(User user){
 
-
-
-//        if (user.getEmail() != null) {
-//            updates.put("email", user.getEmail());
-//        }
-//        if (user.getPhone() != null) {
-//            updates.put("phone", user.getPhone());
-//        }
+        Map<String, Object> updates = new HashMap<>();
+        if (user.getAddress() != null) {
+            updates.put("address", user.getAddress());
+        }
+        if (user.getPhoneNumber() != null) {
+            updates.put("phoneNumber", user.getPhoneNumber());
+        }
+        if (user.getUserName() != null) {
+            updates.put("userName", user.getUserName());
+        }
+        if (user.getImagePath() != null) {
+            updates.put("imagePath", user.getImagePath());
+        }
 
         // Check if there are updates to be made
             userReference.document(auth.getCurrentUser().getUid())
-                    .update("userName",user.getUserName())
+                    .update(updates)
                     .addOnSuccessListener(unused -> isUserAdded.setValue(true))
                     .addOnFailureListener(e -> isUserAdded.setValue(false));
 

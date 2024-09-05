@@ -1,7 +1,10 @@
 package com.example.fooddelivery.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import com.example.fooddelivery.models.User;
 import com.example.fooddelivery.viewmodel.ProfileViewModel;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -76,7 +80,7 @@ public class profileFragment extends Fragment {
                     if (isAdded()) {
                         if (user.getImagePath() != null) {
                             Glide.with(requireActivity()).load(user.getImagePath()).into(binding.profileImage);
-                        } else {
+                        } else if (Objects.equals(user.getImagePath(), "")){
                             binding.profileImage.setImageResource(R.drawable.toy_faces_);
                         }
                     }
@@ -88,49 +92,39 @@ public class profileFragment extends Fragment {
                 }
         );
         binding.changeText.setOnClickListener(v -> {
-            inputsState(true, binding.userNameProfile);
-            inputsState(true, binding.userNumberProfile);
-            inputsState(true, binding.userAddressProfile);
-            binding.profileImage.setFocusable(true);
-            binding.profileImage.setFocusableInTouchMode(true);
-            binding.profileImage.setOnClickListener(view1 -> {
-                pickImage.launch("image/*");
-            });
-            binding.changeText.setText("save");
-            binding.changeText.setOnClickListener(v1 -> {
+            String buttonText = binding.changeText.getText().toString();
+            if (buttonText.equals("Change")) {
+                setInputsEditable(true);
+                binding.changeText.setText("Save");
+                binding.profileImage.setOnClickListener(view1 -> {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    selectProfileImagesActivityResult.launch(intent);
+                });
+            } else if (buttonText.equals("Save")) {
                 if (inputsCheck()) {
-                    getImagePath(path -> {
-                        User user = new User(binding.userNameProfile.getText().toString(), binding.userAddressProfile.getText().toString(),
-                                path, binding.userNumberProfile.getText().toString());
-                        profileViewModel.modifyUserInfo(user);
+                    profileViewModel.getIsImageProfileAdded().observe(requireActivity(), isImageAdded -> {
+                        if (isImageAdded) {
+                            profileViewModel.downloadImagePath.observe(requireActivity(), imagePath -> {
+                                User updatedUser = new User(
+                                        binding.userNameProfile.getText().toString(),
+                                        binding.userAddressProfile.getText().toString(),
+                                        imagePath,
+                                        binding.userNumberProfile.getText().toString()
+                                );
+                                profileViewModel.modifyUserInfo(updatedUser);
+                            });
+                        }
                     });
-
-
-                    profileViewModel.getIsUserAdded().observe(requireActivity(), isAdded -> {
-                        if (isAdded) {
+                    profileViewModel.getIsUserAdded().observe(requireActivity(), isUserSaved -> {
+                        if (isUserSaved) {
                             binding.changeText.setText("Change");
-                            inputsState(false, binding.userNameProfile);
-                            inputsState(false, binding.userNumberProfile);
-                            inputsState(false, binding.userAddressProfile);
+                            setInputsEditable(false);
                         }
                     });
                 }
-            });
-
-        });
-    }
-    public interface ImagePathCallback {
-        void onImagePathRetrieved(String path);
-    }
-    private void getImagePath(ImagePathCallback callback) {
-
-        profileViewModel.getIsImageProfileAdded().observe(requireActivity(), isAdded -> {
-            if (isAdded) {
-
-                profileViewModel.downloadImagePath.observe(requireActivity(), callback::onImagePathRetrieved);
             }
         });
-
     }
 
     private void inputsState(boolean b, EditText editText) {
@@ -142,6 +136,23 @@ public class profileFragment extends Fragment {
             editText.setFocusableInTouchMode(false);
         }
     }
+
+    private final ActivityResultLauncher<Intent> selectProfileImagesActivityResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // Get the intent data
+                    Intent intent = result.getData();
+
+                    // Retrieve the image path (URI)
+                    if (intent != null) {
+                        profileViewModel.addImageToFireBaseStorage(intent.getData());
+                        // Add image to the database
+                        Log.d("TAG",intent.getData().toString());
+                        // Set the image in the ImageView
+                        binding.profileImage.setImageURI(intent.getData());
+                    }
+                }
+            });
 
 
     private Boolean inputsCheck() {
@@ -156,6 +167,13 @@ public class profileFragment extends Fragment {
             return false;
         }
         return true;
+    }
+    private void setInputsEditable(boolean editable) {
+        inputsState(editable, binding.userNameProfile);
+        inputsState(editable, binding.userNumberProfile);
+        inputsState(editable, binding.userAddressProfile);
+        binding.profileImage.setClickable(editable); // Make the image clickable only when editable
+        binding.profileImage.setFocusable(editable);
     }
 
 }
