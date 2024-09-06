@@ -105,29 +105,31 @@ public class profileFragment extends Fragment {
                 binding.changeProgressBar.setVisibility(View.VISIBLE);
                 binding.changeText.setVisibility(View.INVISIBLE);
                 if (inputsCheck()) {
+                    String existingImagePath = profileViewModel.getUserInfo.getValue().getImagePath();
                     profileViewModel.getIsImageProfileAdded().observe(requireActivity(), isImageAdded -> {
                         if (isImageAdded) {
-                            profileViewModel.downloadImagePath.observe(requireActivity(), imagePath -> {
-                                User updatedUser = new User(
-                                        binding.userNameProfile.getText().toString(),
-                                        binding.userAddressProfile.getText().toString(),
-                                        imagePath,
-                                        binding.userNumberProfile.getText().toString()
-                                );
-                                profileViewModel.modifyUserInfo(updatedUser);
-                            });
-                        }
-                    });
-                    profileViewModel.getIsUserAdded().observe(requireActivity(), isUserSaved -> {
-                        if (isUserSaved) {
-                            binding.changeProgressBar.setVisibility(View.GONE);
-                            binding.changeText.setVisibility(View.VISIBLE);
-                            binding.changeText.setText("Change");
-                            setInputsEditable(false);
+                            profileViewModel.downloadImagePath.observe(requireActivity(), this::updateUserProfile);
+                        } else {
+                            updateUserProfile(existingImagePath);
                         }
                     });
                 }
             }
+        });    }
+
+    private void updateUserProfile(String imagePath) {
+        User updatedUser = new User(
+                binding.userNameProfile.getText().toString(),
+                binding.userAddressProfile.getText().toString(),
+                imagePath,
+                binding.userNumberProfile.getText().toString()
+        );
+        profileViewModel.modifyUserInfo(updatedUser);
+        profileViewModel.getIsUserAdded().observe(requireActivity(), isUserSaved -> {
+            binding.changeProgressBar.setVisibility(View.GONE);
+            binding.changeText.setVisibility(View.VISIBLE);
+            binding.changeText.setText("Change");
+            setInputsEditable(false);
         });
     }
 
